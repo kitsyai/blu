@@ -13,15 +13,7 @@ const utilitiesEngine = (b: CssBuilder): ClassEnginePlugin => {
     prefix: b.opts.prefix ?? "",
   });
 
-  const v = variants(
-    b.opts.screens.breakpoints ?? {
-      sm: "640px",
-      md: "768px",
-      lg: "1024px",
-      xl: "1280px",
-      "2xl": "1536px",
-    },
-  );
+  const v = variants(b.opts.screens.breakpoints);
 
   const ruleCtx = {
     screens: b.opts.screens.breakpoints,

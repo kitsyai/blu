@@ -72,10 +72,16 @@ class NavigationStore {
 export const navigationStore = new NavigationStore("/");
 
 export function attachBrowserAdapter(contextPath: string = "/") {
+  const currentUrl =
+    window.location.pathname + window.location.search + window.location.hash;
+  const initialUrl = currentUrl || contextPath || "/";
 
-  console.log("reseting the navigation store to account for current location: ", contextPath);
+  console.log(
+    "reseting the navigation store to account for current location: ",
+    initialUrl,
+  );
 
-  navigationStore.reset(contextPath); // need to see if we need to reset the listeners
+  navigationStore.reset(initialUrl);
 
   const onPop = () => {
     // navigationStore.navigate(window.location.pathname + window.location.search + window.location.hash);
@@ -99,7 +105,11 @@ export function attachBrowserAdapter(contextPath: string = "/") {
         ? "?" + new URLSearchParams(loc.query).toString()
         : "") +
       (loc.hash ? "#" + loc.hash : "");
-    window.history.pushState({}, "", url);
+    const current =
+      window.location.pathname + window.location.search + window.location.hash;
+    if (url !== current) {
+      window.history.pushState({}, "", url);
+    }
   });
 
   return () => {
