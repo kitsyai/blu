@@ -24,6 +24,12 @@ export function DefaultComponentView({
 }: DefaultComponentViewAttributes) {
   const app = useApplicationContext();
   const routeParams = useRouteParams();
+  const appBarRef = React.useRef<HTMLDivElement>(null);
+  const navBarRef = React.useRef<HTMLDivElement>(null);
+  const [contentOffsets, setContentOffsets] = React.useState({
+    top: 0,
+    bottom: 0,
+  });
 
   React.useEffect(() => {
     document.title = view.meta?.title || "";
@@ -47,6 +53,58 @@ export function DefaultComponentView({
     }));
   }, [app]);
 
+  const showNavBar = !(view.navBar?.display === false || !navLinks.length);
+  const showAppBar = view.appBar?.display !== false;
+  const navBarPosition =
+    (view.navBar as any)?.position ?? (app.navBar as any)?.position ?? "bottom";
+
+  React.useLayoutEffect(() => {
+    const updateOffsets = () => {
+      let top = 0;
+      let bottom = 0;
+
+      if (showAppBar) {
+        const appBarElement =
+          (appBarRef.current?.firstElementChild as HTMLElement | null) ??
+          appBarRef.current;
+        top += appBarElement?.getBoundingClientRect().height ?? 0;
+      }
+
+      if (showNavBar) {
+        const navBarElement =
+          (navBarRef.current?.firstElementChild as HTMLElement | null) ??
+          navBarRef.current;
+        const navBarHeight = navBarElement?.getBoundingClientRect().height ?? 0;
+        const computedPosition =
+          navBarElement && typeof window !== "undefined"
+            ? window.getComputedStyle(navBarElement)
+            : null;
+        const isTopNav =
+          navBarPosition === "top" ||
+          (computedPosition?.top !== undefined && computedPosition.top !== "auto");
+
+        if (isTopNav) {
+          top += navBarHeight;
+        } else {
+          bottom += navBarHeight;
+        }
+      }
+
+      setContentOffsets((current) =>
+        current.top === top && current.bottom === bottom
+          ? current
+          : { top, bottom },
+      );
+    };
+
+    updateOffsets();
+    window.addEventListener("resize", updateOffsets);
+
+    return () => {
+      window.removeEventListener("resize", updateOffsets);
+    };
+  }, [showAppBar, showNavBar, navBarPosition, navLinks.length]);
+
   let child = children;
 
   if (React.isValidElement(children)) {
@@ -59,21 +117,35 @@ export function DefaultComponentView({
 
   return (
     <>
-      {view.navBar?.display === false ||
-      !navLinks.length ? null : navRenderComponent ? (
-        navRenderComponent
-      ) : (
-        <NavBar
-          links={navLinks}
-          logo={(app as any)?.brandLogo}
-          logoAlt={(app as any)?.brandName}
-        />
-      )}
-      {view.appBar?.display === false ? null : (
-        <AppBar text={view.appBar?.title || ""} />
-      )}
-      {/* TODO: to account for AppBar height if shown and NavBar height and position.*/}
-      <FluidContainer>{child}</FluidContainer>
+      {showNavBar ? (
+        <div ref={navBarRef}>
+          {navRenderComponent ? (
+            navRenderComponent
+          ) : (
+            <NavBar
+              links={navLinks}
+              position={navBarPosition}
+              logo={(app as any)?.brandLogo}
+              logoAlt={(app as any)?.brandName}
+            />
+          )}
+        </div>
+      ) : null}
+      {showAppBar ? (
+        <div ref={appBarRef}>
+          <AppBar text={view.appBar?.title || ""} />
+        </div>
+      ) : null}
+      <FluidContainer>
+        <div
+          style={{
+            paddingTop: `${contentOffsets.top}px`,
+            paddingBottom: `${contentOffsets.bottom}px`,
+          }}
+        >
+          {child}
+        </div>
+      </FluidContainer>
     </>
   );
 }
