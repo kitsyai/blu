@@ -1,4 +1,4 @@
-import { bus, Command } from "@pkvsinha/react-integrate";
+import { bus, Command } from "@kitsy/blu-bus";
 
 type Location = {
   path: string;

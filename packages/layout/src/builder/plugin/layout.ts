@@ -1,4 +1,4 @@
-import { CssBuilder, BuilderPlugin } from "@pkvsinha/react-theme";
+import { CssBuilder, BuilderPlugin } from "@kitsy/blu-style";
 
 export type LayoutOptions = { container?: string; gapVar?: string };
 

@@ -1,3 +1,3 @@
-// declare module '@pkvsinha/react-app/css';
-declare module '@pkvsinha/react-app/material';
-// declare module '@pkvsinha/react-app/ant';
+// declare module '@kitsy/blu-shell/css';
+declare module '@kitsy/blu-shell/material';
+// declare module '@kitsy/blu-shell/ant';

@@ -8,18 +8,18 @@
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
-    "install:local": "npm install ../../pkvsinha-react-base-0.0.8.tgz ../../pkvsinha-react-integrate-0.0.8.tgz ../../pkvsinha-react-hooks-0.0.8.tgz ../../pkvsinha-react-components-0.0.8.tgz ../../pkvsinha-react-icons-0.0.8.tgz ../../pkvsinha-react-layout-0.0.8.tgz ../../pkvsinha-react-navigate-0.0.8.tgz ../../pkvsinha-react-widgets-0.0.8.tgz ../../pkvsinha-react-app-0.0.8.tgz"
+    "install:local": "npm install ../../kitsy-blu-core-0.0.12.tgz ../../kitsy-blu-bus-0.0.12.tgz ../../kitsy-blu-context-0.0.12.tgz ../../kitsy-blu-ui-0.0.12.tgz ../../kitsy-blu-icons-0.0.12.tgz ../../kitsy-blu-grid-0.0.12.tgz ../../kitsy-blu-route-0.0.12.tgz ../../kitsy-blu-blocks-0.0.12.tgz ../../kitsy-blu-shell-0.0.12.tgz"
   },
   "dependencies": {
-    "@pkvsinha/react-app": "file:../../pkvsinha-react-app-0.0.8.tgz",
-    "@pkvsinha/react-base": "file:../../pkvsinha-react-base-0.0.8.tgz",
-    "@pkvsinha/react-components": "file:../../pkvsinha-react-components-0.0.8.tgz",
-    "@pkvsinha/react-hooks": "file:../../pkvsinha-react-hooks-0.0.8.tgz",
-    "@pkvsinha/react-icons": "file:../../pkvsinha-react-icons-0.0.8.tgz",
-    "@pkvsinha/react-integrate": "file:../../pkvsinha-react-integrate-0.0.8.tgz",
-    "@pkvsinha/react-layout": "file:../../pkvsinha-react-layout-0.0.8.tgz",
-    "@pkvsinha/react-navigate": "file:../../pkvsinha-react-navigate-0.0.8.tgz",
-    "@pkvsinha/react-widgets": "file:../../pkvsinha-react-widgets-0.0.8.tgz",
+    "@kitsy/blu-shell": "file:../../kitsy-blu-shell-0.0.12.tgz",
+    "@kitsy/blu-core": "file:../../kitsy-blu-core-0.0.12.tgz",
+    "@kitsy/blu-ui": "file:../../kitsy-blu-ui-0.0.12.tgz",
+    "@kitsy/blu-context": "file:../../kitsy-blu-context-0.0.12.tgz",
+    "@kitsy/blu-icons": "file:../../kitsy-blu-icons-0.0.12.tgz",
+    "@kitsy/blu-bus": "file:../../kitsy-blu-bus-0.0.12.tgz",
+    "@kitsy/blu-grid": "file:../../kitsy-blu-grid-0.0.12.tgz",
+    "@kitsy/blu-route": "file:../../kitsy-blu-route-0.0.12.tgz",
+    "@kitsy/blu-blocks": "file:../../kitsy-blu-blocks-0.0.12.tgz",
     "next": "15.5.4",
     "react": "19.1.0",
     "react-dom": "19.1.0"

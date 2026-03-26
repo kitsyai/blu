@@ -1,5 +1,5 @@
 {
-  "name": "@pkvsinha/react-layout",
+  "name": "@kitsy/blu-grid",
   "version": "0.0.12",
   "description": "",
   "type": "module",
@@ -16,7 +16,7 @@
       "require": "./dist/cjs/index.js"
     },
     "./css": {
-      "default": "./dist/kitsy.layout.min.css"
+      "default": "./dist/blu.grid.min.css"
     },
     "./builder": {
       "types": "./dist/esm/builder/index.d.ts",
@@ -31,7 +31,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/pkvsinha/reactapp.git"
+    "url": "https://github.com/kitsydev/react-app.git"
   },
   "peerDependencies": {
     "react": ">=18.2.0 <20",
@@ -48,8 +48,8 @@
   "scripts": {
     "test": "vitest",
     "clean": "rimraf dist",
-    "build:css": "tsx scripts/build-css.ts && postcss dist/kitsy.layout.css -o dist/kitsy.layout.css && prettier --write dist/kitsy.layout.css",
-    "minify": "cross-env MINIFY=1 postcss dist/kitsy.layout.min.css -o dist/kitsy.layout.min.css",
+    "build:css": "tsx scripts/build-css.ts && postcss dist/blu.grid.css -o dist/blu.grid.css && prettier --write dist/blu.grid.css",
+    "minify": "cross-env MINIFY=1 postcss dist/blu.grid.min.css -o dist/blu.grid.min.css",
     "prebuild": "pnpm run clean && pnpm run build:css && pnpm run minify",
     "build": "rollup -c",
     "storybook": "storybook dev -p 6006",
@@ -76,7 +76,7 @@
     "vite": "^7.0.6"
   },
   "dependencies": {
-    "@pkvsinha/react-base": "workspace:*",
-    "@pkvsinha/react-theme": "workspace:*"
+    "@kitsy/blu-core": "workspace:*",
+    "@kitsy/blu-style": "workspace:*"
   }
 }

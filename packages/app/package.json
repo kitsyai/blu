@@ -1,14 +1,14 @@
 {
-  "name": "@pkvsinha/react-app",
+  "name": "@kitsy/blu-shell",
   "version": "0.0.12",
   "description": "",
   "type": "module",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
-  "style": "dist/kitsy.material.min.css",
-  "unpkg": "dist/umd/react-app.standalone.min.js",
-  "jsdelivr": "dist/umd/react-app.standalone.min.js",
+  "style": "dist/blu.material.min.css",
+  "unpkg": "dist/umd/blu.standalone.min.js",
+  "jsdelivr": "dist/umd/blu.standalone.min.js",
   "sideEffects": [
     "**/*.css"
   ],
@@ -30,15 +30,15 @@
     },
     "./material": {
       "types": "./types/css.d.ts",
-      "default": "./dist/kitsy.material.min.css"
+      "default": "./dist/blu.material.min.css"
     },
     "./material/legacy": {
       "types": "./types/css.d.ts",
-      "default": "./dist/kitsy.material.legacy.min.css"
+      "default": "./dist/blu.material.legacy.min.css"
     },
     "./material-css": {
       "types": "./types/css.d.ts",
-      "default": "./dist/kitsy.material.css"
+      "default": "./dist/blu.material.css"
     },
     "./builder/css": {
       "types": "./dist/index.d.ts",
@@ -54,7 +54,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/pkvsinha/reactapp.git"
+    "url": "https://github.com/kitsydev/react-app.git"
   },
   "peerDependencies": {
     "react": ">=18.2.0 <20",
@@ -69,21 +69,21 @@
     }
   },
   "dependencies": {
-    "@pkvsinha/react-base": "workspace:*",
-    "@pkvsinha/react-components": "workspace:*",
-    "@pkvsinha/react-hooks": "workspace:*",
-    "@pkvsinha/react-icons": "workspace:*",
-    "@pkvsinha/react-integrate": "workspace:*",
-    "@pkvsinha/react-layout": "workspace:*",
-    "@pkvsinha/react-navigate": "workspace:*",
-    "@pkvsinha/react-theme": "workspace:*",
-    "@pkvsinha/react-widgets": "workspace:*"
+    "@kitsy/blu-core": "workspace:*",
+    "@kitsy/blu-ui": "workspace:*",
+    "@kitsy/blu-context": "workspace:*",
+    "@kitsy/blu-icons": "workspace:*",
+    "@kitsy/blu-bus": "workspace:*",
+    "@kitsy/blu-grid": "workspace:*",
+    "@kitsy/blu-route": "workspace:*",
+    "@kitsy/blu-style": "workspace:*",
+    "@kitsy/blu-blocks": "workspace:*"
   },
   "scripts": {
     "test": "vitest",
     "clean": "rimraf dist",
-    "build:css": "tsx scripts/build-css.ts && postcss dist/kitsy.material.css -o dist/kitsy.material.css && prettier --write dist/kitsy.material.css",
-    "minify": "cross-env MINIFY=1 postcss dist/kitsy.material.min.css -o dist/kitsy.material.min.css",
+    "build:css": "tsx scripts/build-css.ts && postcss dist/blu.material.css -o dist/blu.material.css && prettier --write dist/blu.material.css dist/blu.material.legacy.css",
+    "minify": "cross-env MINIFY=1 postcss dist/blu.material.min.css -o dist/blu.material.min.css",
     "prebuild": "pnpm run clean && pnpm run build:css && pnpm run minify",
     "build:types": "rimraf dist && rollup -c && tsc -p tsconfig.build.json && rollup -c rollup-types.config.js",
     "build": "rollup -c",

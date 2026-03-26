@@ -1,4 +1,4 @@
-import { BuilderPlugin } from "@pkvsinha/react-theme";
+import { BuilderPlugin } from "@kitsy/blu-style";
 
 export const componentsPlugin = (): BuilderPlugin => (b) => {
   // Button

@@ -1,5 +1,5 @@
 {
-  "name": "@pkvsinha/react-integrate",
+  "name": "@kitsy/blu-bus",
   "version": "0.0.12",
   "description": "",
   "type": "module",
@@ -23,7 +23,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/pkvsinha/reactapp.git"
+    "url": "https://github.com/kitsydev/react-app.git"
   },
   "peerDependencies": {
     "react": ">=18.2.0 <20",

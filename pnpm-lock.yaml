@@ -109,31 +109,31 @@ importers:
 
   packages/app:
     dependencies:
-      '@pkvsinha/react-base':
+      '@kitsy/blu-core':
         specifier: workspace:*
         version: link:../base
-      '@pkvsinha/react-components':
+      '@kitsy/blu-ui':
         specifier: workspace:*
         version: link:../components
-      '@pkvsinha/react-hooks':
+      '@kitsy/blu-context':
         specifier: workspace:*
         version: link:../hooks
-      '@pkvsinha/react-icons':
+      '@kitsy/blu-icons':
         specifier: workspace:*
         version: link:../icons
-      '@pkvsinha/react-integrate':
+      '@kitsy/blu-bus':
         specifier: workspace:*
         version: link:../integrate
-      '@pkvsinha/react-layout':
+      '@kitsy/blu-grid':
         specifier: workspace:*
         version: link:../layout
-      '@pkvsinha/react-navigate':
+      '@kitsy/blu-route':
         specifier: workspace:*
         version: link:../navigate
-      '@pkvsinha/react-theme':
+      '@kitsy/blu-style':
         specifier: workspace:*
         version: link:../theme
-      '@pkvsinha/react-widgets':
+      '@kitsy/blu-blocks':
         specifier: workspace:*
         version: link:../widgets
       react:
@@ -191,7 +191,7 @@ importers:
 
   packages/base:
     dependencies:
-      '@pkvsinha/react-theme':
+      '@kitsy/blu-style':
         specifier: workspace:*
         version: link:../theme
       react:
@@ -246,19 +246,19 @@ importers:
 
   packages/components:
     dependencies:
-      '@pkvsinha/react-base':
+      '@kitsy/blu-core':
         specifier: workspace:*
         version: link:../base
-      '@pkvsinha/react-hooks':
+      '@kitsy/blu-context':
         specifier: workspace:*
         version: link:../hooks
-      '@pkvsinha/react-layout':
+      '@kitsy/blu-grid':
         specifier: workspace:*
         version: link:../layout
-      '@pkvsinha/react-navigate':
+      '@kitsy/blu-route':
         specifier: workspace:*
         version: link:../navigate
-      '@pkvsinha/react-theme':
+      '@kitsy/blu-style':
         specifier: workspace:*
         version: link:../theme
       react:
@@ -472,10 +472,10 @@ importers:
 
   packages/layout:
     dependencies:
-      '@pkvsinha/react-base':
+      '@kitsy/blu-core':
         specifier: workspace:*
         version: link:../base
-      '@pkvsinha/react-theme':
+      '@kitsy/blu-style':
         specifier: workspace:*
         version: link:../theme
       react:
@@ -530,7 +530,7 @@ importers:
 
   packages/navigate:
     dependencies:
-      '@pkvsinha/react-integrate':
+      '@kitsy/blu-bus':
         specifier: workspace:*
         version: link:../integrate
       react:
@@ -722,19 +722,19 @@ importers:
 
   packages/widgets:
     dependencies:
-      '@pkvsinha/react-base':
+      '@kitsy/blu-core':
         specifier: workspace:*
         version: link:../base
-      '@pkvsinha/react-components':
+      '@kitsy/blu-ui':
         specifier: workspace:*
         version: link:../components
-      '@pkvsinha/react-layout':
+      '@kitsy/blu-grid':
         specifier: workspace:*
         version: link:../layout
-      '@pkvsinha/react-navigate':
+      '@kitsy/blu-route':
         specifier: workspace:*
         version: link:../navigate
-      '@pkvsinha/react-theme':
+      '@kitsy/blu-style':
         specifier: workspace:*
         version: link:../theme
       react:

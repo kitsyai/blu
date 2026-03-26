@@ -1,6 +1,7 @@
 import { writeFileSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { createThemeBuilder } from "../src";
+import { frameworkCss } from "../../../branding.config.js";
 
 const outDir = resolve(process.cwd(), "dist");
 mkdirSync(outDir, { recursive: true });
@@ -40,11 +41,11 @@ const cssMin = builder.toString({ minify: true });
 const cssLegacy = builder.toString({ minify: false, legacy: true });
 const cssLegacyMin = builder.toString({ minify: true, legacy: true });
 
-writeFileSync(resolve(outDir, "kitsy.theme.css"), css, "utf8");
-writeFileSync(resolve(outDir, "kitsy.theme.min.css"), cssMin, "utf8");
-writeFileSync(resolve(outDir, "kitsy.theme.legacy.css"), cssLegacy, "utf8");
+writeFileSync(resolve(outDir, frameworkCss.style), css, "utf8");
+writeFileSync(resolve(outDir, frameworkCss.styleMin), cssMin, "utf8");
+writeFileSync(resolve(outDir, frameworkCss.styleLegacy), cssLegacy, "utf8");
 writeFileSync(
-  resolve(outDir, "kitsy.theme.legacy.min.css"),
+  resolve(outDir, frameworkCss.styleLegacyMin),
   cssLegacyMin,
   "utf8",
 );
@@ -52,5 +53,5 @@ writeFileSync(
 // const cssCompat = builder.toString({ minify: false });
 // const cssCompatMin = builder.toString({ minify: true });
 
-// writeFileSync(resolve(outDir, "kitsy.theme.compat.css"), cssCompat, "utf8");
-// writeFileSync(resolve(outDir, "kitsy.theme.compat.min.css"), cssCompatMin, "utf8");
+// writeFileSync(resolve(outDir, "blu.style.compat.css"), cssCompat, "utf8");
+// writeFileSync(resolve(outDir, "blu.style.compat.min.css"), cssCompatMin, "utf8");

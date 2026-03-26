@@ -1,4 +1,4 @@
-import { Navigate } from '@pkvsinha/react-navigate';
+import { Navigate } from '@kitsy/blu-route';
 import * as React from 'react';
 
 export function AppBar({ text }: {text: string}): React.JSX.Element {

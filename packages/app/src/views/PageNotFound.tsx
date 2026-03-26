@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Button, NavBar, AppBar } from "@pkvsinha/react-components";
-import { Container, Section } from "@pkvsinha/react-base";
-import { useApplicationContext } from "@pkvsinha/react-hooks";
+import { Button, NavBar, AppBar } from "@kitsy/blu-ui";
+import { Container, Section } from "@kitsy/blu-core";
+import { useApplicationContext } from "@kitsy/blu-context";
 import { View } from "@/@types/View";
 
 interface DefaultComponentViewAttributes {

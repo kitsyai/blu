@@ -1,5 +1,5 @@
 {
-  "name": "@pkvsinha/react-components",
+  "name": "@kitsy/blu-ui",
   "version": "0.0.12",
   "type": "module",
   "description": "My UI React implementation",
@@ -18,7 +18,7 @@
       "require": "./dist/cjs/index.js"
     },
     "./css": {
-      "default": "./dist/kitsy.components.min.css"
+      "default": "./dist/blu.ui.min.css"
     },
     "./builder": {
       "types": "./dist/index.d.ts",
@@ -33,7 +33,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/pkvsinha/reactapp.git"
+    "url": "https://github.com/kitsydev/react-app.git"
   },
   "peerDependencies": {
     "react": ">=18.2.0 <20",
@@ -48,17 +48,17 @@
     }
   },
   "dependencies": {
-    "@pkvsinha/react-base": "workspace:*",
-    "@pkvsinha/react-hooks": "workspace:*",
-    "@pkvsinha/react-layout": "workspace:*",
-    "@pkvsinha/react-navigate": "workspace:*",
-    "@pkvsinha/react-theme": "workspace:*"
+    "@kitsy/blu-core": "workspace:*",
+    "@kitsy/blu-context": "workspace:*",
+    "@kitsy/blu-grid": "workspace:*",
+    "@kitsy/blu-route": "workspace:*",
+    "@kitsy/blu-style": "workspace:*"
   },
   "scripts": {
     "test": "vitest",
     "clean": "rimraf dist",
-    "build:css": "tsx scripts/build-css.ts && postcss dist/kitsy.components.css -o dist/kitsy.components.css && prettier --write dist/kitsy.components.css",
-    "minify": "cross-env MINIFY=1 postcss dist/kitsy.components.min.css -o dist/kitsy.components.min.css",
+    "build:css": "tsx scripts/build-css.ts && postcss dist/blu.ui.css -o dist/blu.ui.css && prettier --write dist/blu.ui.css",
+    "minify": "cross-env MINIFY=1 postcss dist/blu.ui.min.css -o dist/blu.ui.min.css",
     "prebuild": "pnpm run clean && pnpm run build:css && pnpm run minify",
     "build": "rollup -c",
     "storybook": "storybook dev -p 6006",

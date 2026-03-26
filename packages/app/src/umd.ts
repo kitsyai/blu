@@ -5,6 +5,7 @@ import * as ReactDOMClient from "react-dom/client";
 import { render as _render } from './index';
 export * from './index';
 export { React, ReactDOM, ReactDOMClient };
+import { frameworkBundles } from "../../../branding.config.js";
 
 // ---- Auto-render from URL (?render=base64[&root=appId][&strict=1]) ----
 (function autoRenderFromQuery(global: any) {
@@ -34,14 +35,20 @@ export { React, ReactDOM, ReactDOMClient };
       // Your normal render
       if (typeof _render === "function") {
         _render(appConfig, { rootId, strictValidation: strict });
-      } else if (global.ReactApp && typeof global.ReactApp.render === "function") {
+      } else if (
+        global[frameworkBundles.globalName] &&
+        typeof global[frameworkBundles.globalName].render === "function"
+      ) {
         // fallback if needed
-        global.ReactApp.render(appConfig, { rootId, strictValidation: strict });
+        global[frameworkBundles.globalName].render(appConfig, {
+          rootId,
+          strictValidation: strict,
+        });
       } else {
-        console.error("[ReactApp] render() not found on window or module.");
+        console.error(`[${frameworkBundles.globalName}] render() not found on window or module.`);
       }
     } catch (err) {
-      console.error("[ReactApp] Failed to auto-render from ?render=", err);
+      console.error(`[${frameworkBundles.globalName}] Failed to auto-render from ?render=`, err);
     }
   };
 

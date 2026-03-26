@@ -89,7 +89,7 @@ export default [
 //         declarationDir: './dist/esm/types', // Generate types into a temp folder
 //       }),
 //     ],
-//     external: ['react', 'react-dom', "@pkvsinha/react-theme", "@pkvsinha/react-base"],
+//     external: ['react', 'react-dom', "@kitsy/blu-style", "@kitsy/blu-core"],
 //   },
 
 //   // 2. Build for CJS
@@ -130,7 +130,7 @@ export default [
 //         declaration: false, // <-- This is the key
 //       }),
 //     ],
-//     external: ['react', 'react-dom', "@pkvsinha/react-theme", "@pkvsinha/react-base"],
+//     external: ['react', 'react-dom', "@kitsy/blu-style", "@kitsy/blu-core"],
 //   },
 
 //   // 3. Bundle all the type declarations into a single file

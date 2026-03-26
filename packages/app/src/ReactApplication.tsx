@@ -1,6 +1,6 @@
 import * as React from "react";
-import { ApplicationProvider } from "@pkvsinha/react-hooks";
-import { NavigationProvider, Router } from "@pkvsinha/react-navigate";
+import { ApplicationProvider } from "@kitsy/blu-context";
+import { NavigationProvider, Router } from "@kitsy/blu-route";
 import { ReactApplicationAttributes } from "./@types/Application";
 import { PageNotFound } from "./views/PageNotFound";
 

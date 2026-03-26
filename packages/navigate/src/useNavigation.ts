@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { NavigationContext } from "./NavigationContext";
-import { Command } from '@pkvsinha/react-integrate';
+import { Command } from '@kitsy/blu-bus';
 
 
 // export function useNavigation() {

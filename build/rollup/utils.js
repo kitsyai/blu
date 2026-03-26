@@ -1,18 +1,20 @@
+import { frameworkPackages } from "../../branding.config.js";
+
 export function extend(obj = {}, ext = {}) {
   return { ...obj, ...ext };
 }
 
 // Handy lists
 export const INTERNAL_PKG = [
-  "@pkvsinha/react-base",
-  "@pkvsinha/react-components",
-  "@pkvsinha/react-hooks",
-  "@pkvsinha/react-icons",
-  "@pkvsinha/react-integrate",
-  "@pkvsinha/react-layout",
-  "@pkvsinha/react-navigate",
-  "@pkvsinha/react-theme",
-  "@pkvsinha/react-widgets",
+  frameworkPackages.core,
+  frameworkPackages.ui,
+  frameworkPackages.context,
+  frameworkPackages.icons,
+  frameworkPackages.bus,
+  frameworkPackages.grid,
+  frameworkPackages.route,
+  frameworkPackages.style,
+  frameworkPackages.blocks,
 ];
 
 

@@ -6,7 +6,7 @@ import {
   AppContext,
   deepMerge,
   validateAppContext,
-} from "@pkvsinha/react-hooks";
+} from "@kitsy/blu-context";
 import { prepareApp } from "./prepareApp";
 
 const views = (app: Partial<ApplicationConfiguration>) => {
@@ -73,7 +73,7 @@ const init = (app: Partial<ApplicationConfiguration>): AppContext => {
     //   { views: /resolvedViews, home },
   );
 
-  const initialRuntime = deepMerge<import("@pkvsinha/react-hooks").AppContext>(
+  const initialRuntime = deepMerge<import("@kitsy/blu-context").AppContext>(
     {} as any,
     providerDefaults as any,
     flatFromApp as any,

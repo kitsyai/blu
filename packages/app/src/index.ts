@@ -1,17 +1,17 @@
-import { bus } from '@pkvsinha/react-integrate';
+import { bus } from '@kitsy/blu-bus';
 
 export { render } from './browser';
 export { ReactApplication } from './ReactApplication';
 export * from './utils/ErrorBoundary';
 
-export * from "@pkvsinha/react-base";
-export * from "@pkvsinha/react-integrate";
-export * from "@pkvsinha/react-components";
-export * from "@pkvsinha/react-hooks";
-export * from "@pkvsinha/react-icons";
-export * from "@pkvsinha/react-layout";
-export * from "@pkvsinha/react-navigate";
-export * from "@pkvsinha/react-widgets";
+export * from "@kitsy/blu-core";
+export * from "@kitsy/blu-bus";
+export * from "@kitsy/blu-ui";
+export * from "@kitsy/blu-context";
+export * from "@kitsy/blu-icons";
+export * from "@kitsy/blu-grid";
+export * from "@kitsy/blu-route";
+export * from "@kitsy/blu-blocks";
 
 export type * from "./@types";
 export * from "./theme";

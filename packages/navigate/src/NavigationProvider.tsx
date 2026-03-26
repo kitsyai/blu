@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { bus, Command, componentRegistry } from '@pkvsinha/react-integrate';
+import { bus, Command, componentRegistry } from '@kitsy/blu-bus';
 import { NavigationContext } from "./NavigationContext";
 import { navigationStore } from './NavigationStore';
 

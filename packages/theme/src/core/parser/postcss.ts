@@ -105,7 +105,7 @@ export const postcssPkv = (opts: PkvOptions = {}): Plugin => ({
 
     const handleLayerBlock = (at: AtRule, layerHint?: LayerName) => {
       let name = String(at.params || "").trim();
-      // expect "kitsy.components" or fallback to bare name
+      // expect "blu.ui" or fallback to bare name
       let layer: LayerName | undefined;
       if (name.startsWith("kitsy.")) layer = name.slice(4) as LayerName;
       else if (opts.acceptUnprefixedLayer) layer = name as LayerName;

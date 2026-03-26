@@ -1,4 +1,4 @@
-import { AppContext } from '@pkvsinha/react-hooks';
+import { AppContext } from '@kitsy/blu-context';
 import type { ApplicationConfiguration } from './ApplicationConfiguration';
 
 export interface ReactApplicationAttributes {

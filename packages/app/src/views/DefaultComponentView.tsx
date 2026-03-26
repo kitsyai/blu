@@ -1,9 +1,9 @@
 import * as React from "react";
-import { NavBar, AppBar } from "@pkvsinha/react-components";
-import { FluidContainer } from "@pkvsinha/react-base";
-import { useApplicationContext } from "@pkvsinha/react-hooks";
+import { NavBar, AppBar } from "@kitsy/blu-ui";
+import { FluidContainer } from "@kitsy/blu-core";
+import { useApplicationContext } from "@kitsy/blu-context";
 import { View } from "@/@types/View";
-import { useRouteParams } from "@pkvsinha/react-navigate";
+import { useRouteParams } from "@kitsy/blu-route";
 
 interface DefaultComponentViewAttributes {
   view: View;

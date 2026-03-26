@@ -1,6 +1,6 @@
 import React from "react";
 import "./navbar.css";
-import { Navigate } from "@pkvsinha/react-navigate";
+import { Navigate } from "@kitsy/blu-route";
 
 export interface MenuLinkAttributes {
   href: string;

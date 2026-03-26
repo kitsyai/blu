@@ -1,6 +1,6 @@
-import { renderToStringSSR } from "@pkvsinha/react-app/server";
+import { renderToStringSSR } from "@kitsy/blu-shell/server";
 import appConfig from './assets/app.config.json';
-import type { ApplicationConfiguration } from "@pkvsinha/react-app";
+import type { ApplicationConfiguration } from "@kitsy/blu-shell";
 
 export async function render(url: string) {
   const { html, head, dehydrated } = await renderToStringSSR(appConfig as unknown as ApplicationConfiguration, url);
@@ -11,11 +11,11 @@ export async function render(url: string) {
   <meta charset="utf-8" />
   ${head ?? ""}
   <link rel="stylesheet" href="/tailwind.css" />
-  <title>@pkvsinha/react-app • Vite SSR</title>
+  <title>@kitsy/blu-shell • Vite SSR</title>
 </head>
 <body>
   <div id="app">${html}</div>
-  <script>window.__REACT_APP_STATE__=${JSON.stringify({ app: appConfig, dehydrated }).replace(/</g,"\\u003c")}</script>
+  <script>window.__BLU_STATE__=${JSON.stringify({ app: appConfig, dehydrated }).replace(/</g,"\\u003c")}</script>
   <script type="module" src="/src/entry-client.tsx"></script>
 </body>
 </html>`;

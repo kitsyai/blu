@@ -6,6 +6,7 @@ import {
   minify,
   rollupDts,
 } from "./plugins.js";
+import { frameworkBundles } from "../../branding.config.js";
 
 export const dts = () =>
   extend({
@@ -58,9 +59,9 @@ export const umd = () =>
     input: "src/umd.ts",
     external: [],
     output: {
-      file: "dist/umd/react-app.standalone.min.js",
+      file: `dist/umd/${frameworkBundles.standalone}`,
       format: "umd",
-      name: "ReactApp", // Global variable name for your library
+      name: frameworkBundles.globalName,
       sourcemap: true,
       exports: "named",
     },
@@ -73,9 +74,9 @@ export const umdLean = () =>
     external: [...EXTERNAL_PEERS],
     plugins: [replacePlugin(), basePlugins(), tscPlugin(), minify()],
     output: {
-      file: "dist/umd/react-app.lean.min.js",
+      file: `dist/umd/${frameworkBundles.lean}`,
       format: "umd",
-      name: "ReactApp", // Global variable name for your library
+      name: frameworkBundles.globalName,
       sourcemap: true,
       exports: "named",
       globals: {

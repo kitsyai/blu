@@ -1,6 +1,6 @@
 "use client";
 
-import { sc } from "@pkvsinha/react-app/server";
+import { sc } from "@kitsy/blu-shell/server";
 
 const config = {
   view: "Welcome to the world of apps",

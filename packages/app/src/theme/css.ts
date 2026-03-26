@@ -1,10 +1,10 @@
-import { createThemeBuilder } from "@pkvsinha/react-theme";
-import { basePlugin } from "@pkvsinha/react-base";
-import { layoutPlugin } from "@pkvsinha/react-layout";
-import { componentsPlugin } from "@pkvsinha/react-components";
-import { widgetsPlugin } from "@pkvsinha/react-widgets";
+import { createThemeBuilder } from "@kitsy/blu-style";
+import { basePlugin } from "@kitsy/blu-core";
+import { layoutPlugin } from "@kitsy/blu-grid";
+import { componentsPlugin } from "@kitsy/blu-ui";
+import { widgetsPlugin } from "@kitsy/blu-blocks";
 
-// Default theme (kitsy.app.*)
+// Default theme (blu.shell.*)
 // const app = createThemeBuilder().use(basePlugin()).use(layoutPlugin()).use(componentsPlugin()).use(widgetsPlugin());
 const app = createThemeBuilder();
 // Material preset

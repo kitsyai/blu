@@ -1,5 +1,5 @@
 {
-  "name": "@pkvsinha/react-theme",
+  "name": "@kitsy/blu-style",
   "version": "0.0.12",
   "description": "",
   "type": "module",
@@ -18,7 +18,7 @@
     },
     "./sass/*": "./sass/*",
     "./css": {
-      "default": "./dist/kitsy.theme.min.css"
+      "default": "./dist/blu.style.min.css"
     },
     "./builder": {
       "types": "./dist/esm/builder/index.d.ts",
@@ -38,7 +38,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/pkvsinha/reactapp.git"
+    "url": "https://github.com/kitsydev/react-app.git"
   },
   "peerDependencies": {
     "postcss": ">=8",
@@ -56,8 +56,8 @@
   "scripts": {
     "test": "vitest",
     "clean": "rimraf dist",
-    "build:css": "tsx scripts/build-css.ts && postcss dist/kitsy.theme.css -o dist/kitsy.theme.css && prettier --write dist/kitsy.theme.css dist/kitsy.theme.legacy.css",
-    "minify": "cross-env MINIFY=1 postcss dist/kitsy.theme.min.css -o dist/kitsy.theme.min.css",
+    "build:css": "tsx scripts/build-css.ts && postcss dist/blu.style.css -o dist/blu.style.css && prettier --write dist/blu.style.css dist/blu.style.legacy.css",
+    "minify": "cross-env MINIFY=1 postcss dist/blu.style.min.css -o dist/blu.style.min.css",
     "prebuild": "pnpm run clean && pnpm run build:css && pnpm run minify",
     "build": "rollup -c",
     "storybook": "storybook dev -p 6006",

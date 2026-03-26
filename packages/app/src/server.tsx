@@ -6,7 +6,7 @@ import { attachServerAdapter } from "./adapters/server";
 
 import { renderToString } from "react-dom/server"; // blocking
 import { renderToPipeableStream } from "react-dom/server"; // Node streams
-import { NavigationProvider } from "@pkvsinha/react-navigate";
+import { NavigationProvider } from "@kitsy/blu-route";
 import {
   ApplicationConfiguration,
   RenderOptions,

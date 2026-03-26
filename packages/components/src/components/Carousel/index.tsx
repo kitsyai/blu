@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useResponsive } from "@pkvsinha/react-hooks";
-import { Navigate } from '@pkvsinha/react-navigate';
+import { useResponsive } from "@kitsy/blu-context";
+import { Navigate } from '@kitsy/blu-route';
 
 interface ResponsiveAttributes {
     small: boolean;

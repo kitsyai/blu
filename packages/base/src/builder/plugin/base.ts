@@ -1,4 +1,4 @@
-import { CssBuilder, BuilderPlugin } from "@pkvsinha/react-theme";
+import { CssBuilder, BuilderPlugin } from "@kitsy/blu-style";
 
 export const basePlugin = (): BuilderPlugin => (b: CssBuilder) => {
   // 04-elements

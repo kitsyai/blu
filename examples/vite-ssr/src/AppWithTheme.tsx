@@ -1,10 +1,10 @@
-import { packs } from "@pkvsinha/react-app/tokens/packs";
-import { ThemeProvider as ThemeProviderClass } from "@pkvsinha/react-app/theme/ThemeProvider";
+import { packs } from "@kitsy/blu-shell/tokens/packs";
+import { ThemeProvider as ThemeProviderClass } from "@kitsy/blu-shell/theme/ThemeProvider";
 import {
   ThemeProvider,
   useThemeName,
   useToken,
-} from "@pkvsinha/react-app/theme/react";
+} from "@kitsy/blu-shell/theme/react";
 
 const tp = new ThemeProviderClass(packs.radix, "light");
 

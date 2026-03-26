@@ -6,8 +6,8 @@ import type {
   ApplicationConfiguration,
   RenderOptions,
 } from "./@types/ApplicationConfiguration";
-import { attachBrowserAdapter } from "@pkvsinha/react-navigate";
-import { createThemeBuilder } from "@pkvsinha/react-theme";
+import { attachBrowserAdapter } from "@kitsy/blu-route";
+import { createThemeBuilder } from "@kitsy/blu-style";
 import { compile } from "./utils/compile";
 import { routes } from "./utils/routes";
 import type { AppConfig } from "./@types/AppConfig";

@@ -1,4 +1,4 @@
-import { Command } from '@pkvsinha/react-integrate';
+import { Command } from '@kitsy/blu-bus';
 import * as React from 'react';
 
 type Location = {

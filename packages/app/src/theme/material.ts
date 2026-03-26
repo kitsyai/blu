@@ -1,7 +1,7 @@
-import { createThemeBuilder } from "@pkvsinha/react-theme";
-import { basePlugin } from "@pkvsinha/react-base";
-import { layoutPlugin } from "@pkvsinha/react-layout";
-import { componentsPlugin } from "@pkvsinha/react-components";
+import { createThemeBuilder } from "@kitsy/blu-style";
+import { basePlugin } from "@kitsy/blu-core";
+import { layoutPlugin } from "@kitsy/blu-grid";
+import { componentsPlugin } from "@kitsy/blu-ui";
 
 const builder = createThemeBuilder({
   tokens: { "color-primary-500": "#16a34a" },

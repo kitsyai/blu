@@ -1,7 +1,7 @@
 
 // import { toBrowserUrlString } from "./sharedUrl"; // build "browser://..." if you kept that scheme
 
-import { EventBus } from "@pkvsinha/react-integrate";
+import { EventBus } from "@kitsy/blu-bus";
 
 function toBrowserUrlString(url: string) {
   return url;

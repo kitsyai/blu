@@ -93,10 +93,10 @@ export default [
 //     external: [
 //       'react',
 //       'react-dom',
-//       '@pkvsinha/react-base',
-//       '@pkvsinha/react-hooks',
-//       '@pkvsinha/react-layout',
-//       '@pkvsinha/react-navigate'
+//       '@kitsy/blu-core',
+//       '@kitsy/blu-context',
+//       '@kitsy/blu-grid',
+//       '@kitsy/blu-route'
 //     ],
 //   },
 
@@ -141,10 +141,10 @@ export default [
 //     external: [
 //       'react',
 //       'react-dom',
-//       '@pkvsinha/react-base',
-//       '@pkvsinha/react-hooks',
-//       '@pkvsinha/react-layout',
-//       '@pkvsinha/react-navigate'
+//       '@kitsy/blu-core',
+//       '@kitsy/blu-context',
+//       '@kitsy/blu-grid',
+//       '@kitsy/blu-route'
 //     ],
 //   },
 
@@ -181,9 +181,9 @@ export default [
 //     external: [
 //       'react',
 //       'react-dom',
-//       '@pkvsinha/react-base',
-//       '@pkvsinha/react-hooks',
-//       '@pkvsinha/react-navigate'
+//       '@kitsy/blu-core',
+//       '@kitsy/blu-context',
+//       '@kitsy/blu-route'
 //     ],
 //   },
 // ];

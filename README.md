@@ -1,5 +1,7 @@
-# react-myui
+# blu
 A customizable React UI implementation
+
+`blu` is the current placeholder framework name until legal clearance is complete. Bundle and asset branding now flow from a shared config so a future rename does not require another repo-wide output rewrite.
 
 > [!WARNING]
 > This repostiory uses **pnpm** as package manager. Please pay close attention to this information as it is crucial for preventing potential issues or risks.
@@ -17,34 +19,34 @@ A customizable React UI implementation
 ## Dependencies
 
 ```
-pnpm --filter @pkvsinha/react-app add @pkvsinha/react-base@workspace:*
-pnpm --filter @pkvsinha/react-app add @pkvsinha/react-integrate@workspace:*
-pnpm --filter @pkvsinha/react-app add @pkvsinha/react-components@workspace:*
-pnpm --filter @pkvsinha/react-app add @pkvsinha/react-hooks@workspace:*
-pnpm --filter @pkvsinha/react-app add @pkvsinha/react-icons@workspace:*
-pnpm --filter @pkvsinha/react-app add @pkvsinha/react-layout@workspace:*
-pnpm --filter @pkvsinha/react-app add @pkvsinha/react-navigate@workspace:*
-pnpm --filter @pkvsinha/react-app add @pkvsinha/react-widgets@workspace:*
-pnpm --filter @pkvsinha/react-app add @pkvsinha/react-theme@workspace:*
+pnpm --filter @kitsy/blu-shell add @kitsy/blu-core@workspace:*
+pnpm --filter @kitsy/blu-shell add @kitsy/blu-bus@workspace:*
+pnpm --filter @kitsy/blu-shell add @kitsy/blu-ui@workspace:*
+pnpm --filter @kitsy/blu-shell add @kitsy/blu-context@workspace:*
+pnpm --filter @kitsy/blu-shell add @kitsy/blu-icons@workspace:*
+pnpm --filter @kitsy/blu-shell add @kitsy/blu-grid@workspace:*
+pnpm --filter @kitsy/blu-shell add @kitsy/blu-route@workspace:*
+pnpm --filter @kitsy/blu-shell add @kitsy/blu-blocks@workspace:*
+pnpm --filter @kitsy/blu-shell add @kitsy/blu-style@workspace:*
 
-pnpm --filter @pkvsinha/react-navigate add @pkvsinha/react-integrate@workspace:*
+pnpm --filter @kitsy/blu-route add @kitsy/blu-bus@workspace:*
 
-pnpm --filter @pkvsinha/react-widgets add @pkvsinha/react-navigate@workspace:*
-pnpm --filter @pkvsinha/react-widgets add @pkvsinha/react-theme@workspace:*
-pnpm --filter @pkvsinha/react-widgets add @pkvsinha/react-base@workspace:*
-pnpm --filter @pkvsinha/react-widgets add @pkvsinha/react-layout@workspace:*
-pnpm --filter @pkvsinha/react-widgets add @pkvsinha/react-components@workspace:*
+pnpm --filter @kitsy/blu-blocks add @kitsy/blu-route@workspace:*
+pnpm --filter @kitsy/blu-blocks add @kitsy/blu-style@workspace:*
+pnpm --filter @kitsy/blu-blocks add @kitsy/blu-core@workspace:*
+pnpm --filter @kitsy/blu-blocks add @kitsy/blu-grid@workspace:*
+pnpm --filter @kitsy/blu-blocks add @kitsy/blu-ui@workspace:*
 
-pnpm --filter @pkvsinha/react-components add @pkvsinha/react-theme@workspace:*
-pnpm --filter @pkvsinha/react-components add @pkvsinha/react-base@workspace:*
-pnpm --filter @pkvsinha/react-components add @pkvsinha/react-layout@workspace:*
-pnpm --filter @pkvsinha/react-components add @pkvsinha/react-hooks@workspace:*
-pnpm --filter @pkvsinha/react-components add @pkvsinha/react-navigate@workspace:*
+pnpm --filter @kitsy/blu-ui add @kitsy/blu-style@workspace:*
+pnpm --filter @kitsy/blu-ui add @kitsy/blu-core@workspace:*
+pnpm --filter @kitsy/blu-ui add @kitsy/blu-grid@workspace:*
+pnpm --filter @kitsy/blu-ui add @kitsy/blu-context@workspace:*
+pnpm --filter @kitsy/blu-ui add @kitsy/blu-route@workspace:*
 
-pnpm --filter @pkvsinha/react-layout add @pkvsinha/react-theme@workspace:*
-pnpm --filter @pkvsinha/react-layout add @pkvsinha/react-base@workspace:*
+pnpm --filter @kitsy/blu-grid add @kitsy/blu-style@workspace:*
+pnpm --filter @kitsy/blu-grid add @kitsy/blu-core@workspace:*
 
-pnpm --filter @pkvsinha/react-base add @pkvsinha/react-theme@workspace:*
+pnpm --filter @kitsy/blu-core add @kitsy/blu-style@workspace:*
 
 ```
 
