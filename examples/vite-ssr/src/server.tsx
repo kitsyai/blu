@@ -11,7 +11,7 @@ export async function render(url: string) {
   <meta charset="utf-8" />
   ${head ?? ""}
   <link rel="stylesheet" href="/tailwind.css" />
-  <title>@kitsy/blu-shell • Vite SSR</title>
+  <title>Blu • Vite SSR</title>
 </head>
 <body>
   <div id="app">${html}</div>

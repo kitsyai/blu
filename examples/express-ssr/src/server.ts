@@ -25,7 +25,7 @@ app.get("*", async (req, res) => {
     <head>
       <meta charset="utf-8"/>
       <link rel="stylesheet" href="/assets/tailwind.css">
-      <title>@kitsy/blu-shell • Express SSR</title>
+      <title>Blu • Express SSR</title>
     </head>
     <body>
       <div id="app">${html}</div>

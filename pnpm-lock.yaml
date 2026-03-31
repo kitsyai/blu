@@ -109,33 +109,33 @@ importers:
 
   packages/app:
     dependencies:
-      '@kitsy/blu-core':
+      '@kitsy/blu-blocks':
         specifier: workspace:*
-        version: link:../base
-      '@kitsy/blu-ui':
-        specifier: workspace:*
-        version: link:../components
-      '@kitsy/blu-context':
-        specifier: workspace:*
-        version: link:../hooks
-      '@kitsy/blu-icons':
-        specifier: workspace:*
-        version: link:../icons
+        version: link:../widgets
       '@kitsy/blu-bus':
         specifier: workspace:*
         version: link:../integrate
+      '@kitsy/blu-context':
+        specifier: workspace:*
+        version: link:../hooks
+      '@kitsy/blu-core':
+        specifier: workspace:*
+        version: link:../base
       '@kitsy/blu-grid':
         specifier: workspace:*
         version: link:../layout
+      '@kitsy/blu-icons':
+        specifier: workspace:*
+        version: link:../icons
       '@kitsy/blu-route':
         specifier: workspace:*
         version: link:../navigate
       '@kitsy/blu-style':
         specifier: workspace:*
         version: link:../theme
-      '@kitsy/blu-blocks':
+      '@kitsy/blu-ui':
         specifier: workspace:*
-        version: link:../widgets
+        version: link:../components
       react:
         specifier: '>=18.2.0 <20'
         version: 19.1.1
@@ -246,12 +246,12 @@ importers:
 
   packages/components:
     dependencies:
-      '@kitsy/blu-core':
-        specifier: workspace:*
-        version: link:../base
       '@kitsy/blu-context':
         specifier: workspace:*
         version: link:../hooks
+      '@kitsy/blu-core':
+        specifier: workspace:*
+        version: link:../base
       '@kitsy/blu-grid':
         specifier: workspace:*
         version: link:../layout
@@ -725,9 +725,6 @@ importers:
       '@kitsy/blu-core':
         specifier: workspace:*
         version: link:../base
-      '@kitsy/blu-ui':
-        specifier: workspace:*
-        version: link:../components
       '@kitsy/blu-grid':
         specifier: workspace:*
         version: link:../layout
@@ -737,6 +734,9 @@ importers:
       '@kitsy/blu-style':
         specifier: workspace:*
         version: link:../theme
+      '@kitsy/blu-ui':
+        specifier: workspace:*
+        version: link:../components
       react:
         specifier: '>=18.2.0 <20'
         version: 19.1.1
