@@ -8,6 +8,6 @@ export default defineConfig({
     rollupOptions: { input: "src/client.tsx" }
   },
   ssr: {
-    noExternal: ["@kitsy/blu-shell"]
+    noExternal: ["@kitsy/blu"]
   }
 })

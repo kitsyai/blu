@@ -19,15 +19,15 @@ A customizable React UI implementation
 ## Dependencies
 
 ```
-pnpm --filter @kitsy/blu-shell add @kitsy/blu-core@workspace:*
-pnpm --filter @kitsy/blu-shell add @kitsy/blu-bus@workspace:*
-pnpm --filter @kitsy/blu-shell add @kitsy/blu-ui@workspace:*
-pnpm --filter @kitsy/blu-shell add @kitsy/blu-context@workspace:*
-pnpm --filter @kitsy/blu-shell add @kitsy/blu-icons@workspace:*
-pnpm --filter @kitsy/blu-shell add @kitsy/blu-grid@workspace:*
-pnpm --filter @kitsy/blu-shell add @kitsy/blu-route@workspace:*
-pnpm --filter @kitsy/blu-shell add @kitsy/blu-blocks@workspace:*
-pnpm --filter @kitsy/blu-shell add @kitsy/blu-style@workspace:*
+pnpm --filter @kitsy/blu add @kitsy/blu-core@workspace:*
+pnpm --filter @kitsy/blu add @kitsy/blu-bus@workspace:*
+pnpm --filter @kitsy/blu add @kitsy/blu-ui@workspace:*
+pnpm --filter @kitsy/blu add @kitsy/blu-context@workspace:*
+pnpm --filter @kitsy/blu add @kitsy/blu-icons@workspace:*
+pnpm --filter @kitsy/blu add @kitsy/blu-grid@workspace:*
+pnpm --filter @kitsy/blu add @kitsy/blu-route@workspace:*
+pnpm --filter @kitsy/blu add @kitsy/blu-blocks@workspace:*
+pnpm --filter @kitsy/blu add @kitsy/blu-style@workspace:*
 
 pnpm --filter @kitsy/blu-route add @kitsy/blu-bus@workspace:*
 

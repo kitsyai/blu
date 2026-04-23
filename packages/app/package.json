@@ -1,5 +1,5 @@
 {
-  "name": "@kitsy/blu-shell",
+  "name": "@kitsy/blu",
   "version": "0.0.12",
   "description": "",
   "type": "module",
@@ -97,6 +97,9 @@
   ],
   "author": "Prashant Sinha",
   "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
   "packageManager": "pnpm@10.13.1",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.6",

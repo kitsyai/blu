@@ -1,6 +1,6 @@
 "use client";
 
-import { sc } from "@kitsy/blu-shell/server";
+import { sc } from "@kitsy/blu/server";
 
 const config = {
   view: "Welcome to the world of apps",

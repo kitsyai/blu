@@ -1,6 +1,6 @@
-import { renderToStringSSR } from "@kitsy/blu-shell/server";
+import { renderToStringSSR } from "@kitsy/blu/server";
 import appConfig from './assets/app.config.json';
-import type { ApplicationConfiguration } from "@kitsy/blu-shell";
+import type { ApplicationConfiguration } from "@kitsy/blu";
 
 export async function render(url: string) {
   const { html, head, dehydrated } = await renderToStringSSR(appConfig as unknown as ApplicationConfiguration, url);

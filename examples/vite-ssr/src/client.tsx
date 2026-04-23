@@ -1,4 +1,4 @@
-import { render, type ApplicationConfiguration } from "@kitsy/blu-shell";
+import { render, type ApplicationConfiguration } from "@kitsy/blu";
 
 interface BluState {
   app: ApplicationConfiguration; // Replace 'unknown' with the actual type if known

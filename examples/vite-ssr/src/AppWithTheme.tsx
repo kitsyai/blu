@@ -1,10 +1,10 @@
-import { packs } from "@kitsy/blu-shell/tokens/packs";
-import { ThemeProvider as ThemeProviderClass } from "@kitsy/blu-shell/theme/ThemeProvider";
+import { packs } from "@kitsy/blu/tokens/packs";
+import { ThemeProvider as ThemeProviderClass } from "@kitsy/blu/theme/ThemeProvider";
 import {
   ThemeProvider,
   useThemeName,
   useToken,
-} from "@kitsy/blu-shell/theme/react";
+} from "@kitsy/blu/theme/react";
 
 const tp = new ThemeProviderClass(packs.radix, "light");
 

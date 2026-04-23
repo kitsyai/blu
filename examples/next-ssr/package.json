@@ -8,10 +8,10 @@
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
-    "install:local": "npm install ../../kitsy-blu-core-0.0.12.tgz ../../kitsy-blu-bus-0.0.12.tgz ../../kitsy-blu-context-0.0.12.tgz ../../kitsy-blu-ui-0.0.12.tgz ../../kitsy-blu-icons-0.0.12.tgz ../../kitsy-blu-grid-0.0.12.tgz ../../kitsy-blu-route-0.0.12.tgz ../../kitsy-blu-blocks-0.0.12.tgz ../../kitsy-blu-shell-0.0.12.tgz"
+    "install:local": "npm install ../../kitsy-blu-core-0.0.12.tgz ../../kitsy-blu-bus-0.0.12.tgz ../../kitsy-blu-context-0.0.12.tgz ../../kitsy-blu-ui-0.0.12.tgz ../../kitsy-blu-icons-0.0.12.tgz ../../kitsy-blu-grid-0.0.12.tgz ../../kitsy-blu-route-0.0.12.tgz ../../kitsy-blu-blocks-0.0.12.tgz ../../kitsy-blu-0.0.12.tgz"
   },
   "dependencies": {
-    "@kitsy/blu-shell": "file:../../kitsy-blu-shell-0.0.12.tgz",
+    "@kitsy/blu": "file:../../kitsy-blu-0.0.12.tgz",
     "@kitsy/blu-core": "file:../../kitsy-blu-core-0.0.12.tgz",
     "@kitsy/blu-ui": "file:../../kitsy-blu-ui-0.0.12.tgz",
     "@kitsy/blu-context": "file:../../kitsy-blu-context-0.0.12.tgz",

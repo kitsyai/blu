@@ -58,6 +58,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
   "packageManager": "pnpm@10.13.1",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.6",

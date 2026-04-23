@@ -2,7 +2,7 @@ import express from "express";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { renderToStringSSR } from "@kitsy/blu-shell/server"; // <-- your server entry
+import { renderToStringSSR } from "@kitsy/blu/server"; // <-- your server entry
 import { frameworkBundles } from "../../../branding.config.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

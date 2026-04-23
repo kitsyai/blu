@@ -1,5 +1,5 @@
-// import { attachBrowserAdapter } from "@kitsy/blu-shell/adapters/browser"; // if exported
-import { render } from "@kitsy/blu-shell";
+// import { attachBrowserAdapter } from "@kitsy/blu/adapters/browser"; // if exported
+import { render } from "@kitsy/blu";
 
 export function hydrateClient() {
   const state = (window as any).__BLU_STATE__;

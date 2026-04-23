@@ -1,7 +1,7 @@
 import { bus } from '@kitsy/blu-bus';
 
 export { render } from './browser';
-export { ReactApplication } from './ReactApplication';
+export { ReactApplication, ReactApplication as App } from './ReactApplication';
 export * from './utils/ErrorBoundary';
 
 export * from "@kitsy/blu-core";

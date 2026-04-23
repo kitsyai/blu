@@ -8,10 +8,10 @@
     "build": "tsc -b && vite build --ssr src/server.tsx",
     "lint": "eslint .",
     "preview": "cross-env NODE_ENV=production node dist/server.js",
-    "install:local": "npm install ../../kitsy-blu-shell-0.0.12.tgz"
+    "install:local": "npm install ../../kitsy-blu-0.0.12.tgz"
   },
   "dependencies": {
-    "@kitsy/blu-shell": "file:../../kitsy-blu-shell-0.0.12.tgz",
+    "@kitsy/blu": "file:../../kitsy-blu-0.0.12.tgz",
     "cross-env": "^10.0.0",
     "react": ">=18.2.0 <20",
     "react-dom": ">=18.2.0 <20"

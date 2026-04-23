@@ -9,7 +9,7 @@ export const frameworkBrand = Object.freeze({
 });
 
 export const frameworkPackages = Object.freeze({
-  shell: "@kitsy/blu-shell",
+  shell: "@kitsy/blu",
   core: "@kitsy/blu-core",
   ui: "@kitsy/blu-ui",
   context: "@kitsy/blu-context",
