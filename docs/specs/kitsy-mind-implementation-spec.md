@@ -1,11 +1,9 @@
 # Kitsy Mind — Implementation Specification
 
-**Version:** 1.0  
-**Date:** 2026-03-22  
-**Status:** Implementation-ready companion to *Kitsy Blu — Single Source of Truth v2.0*  
-**Scope:** Phase 4 deliverable — `@kitsy/mind`, `@kitsy/prompts`  
-**License:** Proprietary  
-**Read alongside:** SSOT §8.6, §2.5 (AI-readiness thesis), §6 (all contracts), Server Spec §12 (AI integration)
+**Status:** Canonical — implementation specification for Kitsy Mind
+**Scope:** Phase 4 deliverable — `@kitsy/mind`, `@kitsy/prompts`
+**License:** Proprietary
+**Read first:** `docs/blu/foundation.md`, `docs/blu/architecture.md`, `docs/blu/specification.md` (full reference; especially §10-15 for schema, actions, forms, data sources, and component registry), `docs/specs/kitsy-server-implementation-spec.md` §12 (AI integration)
 
 ---
 
@@ -721,7 +719,7 @@ interface GenerateFormPayload {
 
 ### 11.2 Output
 
-A `FormViewNode` (SSOT §6.7) with fields, validation rules, submission target, and layout configuration.
+A `FormViewNode` (`docs/blu/specification.md` §13 Forms) with fields, validation rules, submission target, and layout configuration.
 
 ### 11.3 Strategy
 
@@ -1293,7 +1291,7 @@ interface AIEvalEntry {
 | Dependency | Required From | Required By Sprint |
 |-----------|--------------|-------------------|
 | `@kitsy/blu-validate` | Blu Phase 1 | S3 |
-| `@kitsy/blu-types` (JSON Schema) | Blu Phase 0 | S2 |
+| `@kitsy/blu-schema` (JSON Schema) | Blu Phase 0 | S2 |
 | Component registry + ComponentMeta | Blu Phase 0 + Component Spec | S2 |
 | `@kitsy/server` (bus effects) | Server Phase 2 | S5 |
 | `@kitsy/canvas` (tree operations) | Studio Phase 3 | S6 |

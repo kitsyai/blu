@@ -14,8 +14,8 @@
 > **DO NOT BEGIN THIS TRACK** until ALL of the following are true:
 >
 > 1. Phase 2 gate met (Server operational — config store, sync, publish all working)
-> 2. `@kitsy/blu-validate` published and functional (Blu A9)
-> 3. `@kitsy/blu-types` published with full ViewNode + ComponentMeta schemas (Blu A2)
+> 2. `@kitsy/blu-validate` published and functional (Blu Sprint 1)
+> 3. `@kitsy/blu-schema` published with full ViewNode + ComponentMeta schemas (Blu Sprint 1)
 > 4. Component registry populated with ComponentMeta for all 49 components (Component Spec)
 > 5. Platform shell running with Blu module site management (Platform B3-B4)
 >
@@ -238,7 +238,7 @@
 
 ```
 DEPENDENCY RULES:
-  @kitsy/canvas → @kitsy/blu-types (types only)
+  @kitsy/canvas → @kitsy/blu-schema (types only)
   @kitsy/studio → @kitsy/blu-shell, @kitsy/blu-bus, @kitsy/canvas, @kitsy/blu-sync
   @kitsy/studio → does NOT import @kitsy/mind (AI chat is added later via Mind track)
 ```

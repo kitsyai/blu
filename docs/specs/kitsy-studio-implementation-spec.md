@@ -1,11 +1,9 @@
 # Kitsy Studio — Implementation Specification
 
-**Version:** 1.0  
-**Date:** 2026-03-22  
-**Status:** Implementation-ready companion to *Kitsy Blu — Single Source of Truth v2.0*  
-**Scope:** Phase 3 deliverable — `@kitsy/studio`, `@kitsy/canvas`  
-**License:** Proprietary  
-**Read alongside:** SSOT §8.5, §6.2 (ViewNode), §6.8 (ComponentMeta), Component Specifications (companion doc)
+**Status:** Canonical — implementation specification for Kitsy Studio
+**Scope:** Phase 3 deliverable — `@kitsy/studio`, `@kitsy/canvas`
+**License:** Proprietary
+**Read first:** `docs/blu/foundation.md`, `docs/blu/architecture.md`, `docs/blu/specification.md` (§11 ViewNode, §12 Actions, §15 Component Registry and URNs), `docs/specs/blu-component-specifications.md`
 
 ---
 
@@ -747,7 +745,7 @@ Data Sources
 
 ### 11.2 Data source configuration form
 
-Generated from the DataSource schema (SSOT §6.4). Fields vary by adapter type:
+Generated from the DataSource schema (`docs/blu/specification.md` §14 DataSource). Fields vary by adapter type:
 
 | Adapter | Configuration Fields |
 |---------|---------------------|
@@ -840,7 +838,7 @@ When user clicks to wire an action, a builder modal appears:
 └─────────────────────────────────────────┘
 ```
 
-The builder produces a serializable Action object (SSOT §6.6) — no code, just data.
+The builder produces a serializable Action object (`docs/blu/specification.md` §12 Actions) — no code, just data.
 
 ---
 
@@ -1113,7 +1111,7 @@ Mind receives the full current config + selection context, so it can:
 
 | Dependency | Required From | Required By Sprint |
 |-----------|--------------|-------------------|
-| `@kitsy/blu-types` (JSON Schema) | Blu Phase 0 | S1 |
+| `@kitsy/blu-schema` (JSON Schema) | Blu Phase 0 | S1 |
 | `@kitsy/blu-validate` | Blu Phase 1 | S1 |
 | Component registry + ComponentMeta | Blu Phase 0 | S4 |
 | `@kitsy/blu-shell` (render in iframe) | Blu Phase 0 | S7 |

@@ -1,10 +1,8 @@
 # Blu Component Specifications
 
-**Version:** 1.0  
-**Date:** 2026-03-22  
-**Status:** Implementation-ready companion to *Kitsy Blu — Single Source of Truth v2.0*  
-**Scope:** Complete specification for every component URN in the Blu registry — primitives, UI elements, layout, blocks, forms, and templates  
-**Read alongside:** Kitsy Blu SSOT §6.2 (ViewNode), §6.7 (Forms), §6.8 (ComponentMeta)
+**Status:** Canonical
+**Scope:** Complete specification for every component URN in the Blu registry — primitives, UI elements, layout, blocks, forms, and templates.
+**Read first:** `docs/blu/foundation.md`, `docs/blu/architecture.md`, `docs/blu/specification.md` (particularly §11 ViewNode, §13 Forms, §15 Component Registry and URNs).
 
 ---
 
@@ -861,14 +859,14 @@ interface NavAction {
 
 ## 7. Form Components
 
-Forms follow the contract defined in SSOT §6.7. The form system is a composition of two component types:
+Forms follow the contract defined in `docs/blu/specification.md` §13 Forms. The form system is a composition of two component types:
 
 ### 7.1 `urn:blu:block:form`
 
 The form wrapper. Manages form state via the EventBus (form:init, form:change, form:validate, form:submit, etc.).
 
 ```typescript
-// Props defined in SSOT §6.7 (FormViewNode.form)
+// Props defined in docs/blu/specification.md §13 (Forms — FormViewNode.form)
 // This component:
 // 1. Dispatches form:init on mount
 // 2. Renders fields based on form.fields declaration
@@ -1301,7 +1299,7 @@ Components that have `responsiveProps` in their meta can accept per-breakpoint v
 ```typescript
 import React from "react";
 import { useBluBus, useBluTheme } from "@kitsy/blu-context";
-import type { ComponentMeta } from "@kitsy/blu-types";
+import type { ComponentMeta } from "@kitsy/blu-schema";
 
 // 1. Define the component
 interface ProductCardProps {

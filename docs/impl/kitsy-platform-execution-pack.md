@@ -111,7 +111,7 @@
 
 **Objective:** Basic JSON config editor for sites — placeholder until Studio ships.
 
-**Ref:** Blu SSOT §6.1 (ApplicationConfiguration)
+**Ref:** `docs/blu/specification.md` §10 (Schema types — ApplicationConfiguration)
 
 | # | Task |
 |---|------|
@@ -121,7 +121,7 @@
 | 4 | Validation on save: run `@kitsy/blu-validate` (if available) or basic JSON.parse check |
 | 5 | Preview button: opens new tab with `?_render=<base64 of config>` using Blu CDN runtime |
 | 6 | Version display: show current config version number |
-| 7 | Create-from-template: dropdown to select from 3 hardcoded example configs (simple landing, business, contact page) from `@kitsy/blu-types` examples |
+| 7 | Create-from-template: dropdown to select from 3 hardcoded example configs (simple landing, business, contact page) from `@kitsy/blu-schema` examples |
 
 **Exit criteria:**
 - [ ] User can view their site's config as JSON
@@ -233,7 +233,7 @@ Platform shell:
 ```
 ALLOWED:
   apps/web → @kitsy/blu-shell, @kitsy/blu-ui, @kitsy/blu-bus, supabase-js
-  packages/platform → @kitsy/blu-types
+  packages/platform → @kitsy/blu-schema
 
 NOT ALLOWED:
   apps/web → @kitsy/studio (until Phase 4)

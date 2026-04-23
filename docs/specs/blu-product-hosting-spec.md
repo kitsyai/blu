@@ -1,11 +1,9 @@
 # Blu Product Hosting — Implementation Specification
 
-**Version:** 1.1 (renamed from "kitsy.ai Platform")  
-**Date:** 2026-03-22  
-**Status:** Implementation-ready companion to *Kitsy Blu — Single Source of Truth v2.0*  
-**Scope:** Blu-specific SaaS features within the Kitsy platform — site management, publish pipeline, domains, analytics, templates. This document covers the Blu MODULE's hosting and delivery capabilities, NOT the platform shell itself.  
-**License:** Proprietary (SaaS — Terms of Service)  
-**Read alongside:** SSOT §8.7, Kitsy Platform Architecture (the module-agnostic shell), Server Spec (infra), Studio Spec (builder), Mind Spec (AI)  
+**Status:** Canonical — implementation specification for the Blu hosted product
+**Scope:** Blu-specific SaaS features within the Kitsy platform — site management, publish pipeline, domains, analytics, templates. This document covers the Blu MODULE's hosting and delivery capabilities, NOT the platform shell itself.
+**License:** Proprietary (SaaS — Terms of Service)
+**Read first:** `docs/blu/foundation.md`, `docs/blu/architecture.md`, `docs/blu/specification.md`, `docs/reference/kitsy-platform-architecture.md` (the module-agnostic shell), `docs/specs/kitsy-server-implementation-spec.md`, `docs/specs/kitsy-studio-implementation-spec.md`, `docs/specs/kitsy-mind-implementation-spec.md`
 **Note:** The Kitsy Platform Architecture document defines the shared platform shell (auth, tenancy, billing, dashboard, module contract, Crew). This document covers only the Blu-specific features that plug INTO that shell.
 
 ---
@@ -418,7 +416,7 @@ Platform API: POST /api/v1/publish/:siteId
 │                                         │
 │  1. Load latest config from ConfigStore  │
 │  2. Validate config (full pipeline)      │
-│  3. Run @kitsy/blu-shell/core compile    │
+│  3. Run @kitsy/blu-shell compile    │
 │  4. Render each view via renderToString  │
 │     SSR() → static HTML                  │
 │  5. Generate CSS via CssBuilder          │

@@ -14,8 +14,8 @@
 > **DO NOT BEGIN THIS TRACK** until ALL of the following are true:
 >
 > 1. Phase 2 gate met (Server operational — bus effects, config store, sync all working)
-> 2. `@kitsy/blu-validate` published and functional (Blu A9)
-> 3. `@kitsy/blu-types` published with full JSON Schema (Blu A2)
+> 2. `@kitsy/blu-validate` published and functional (Blu Sprint 1)
+> 3. `@kitsy/blu-schema` published with full JSON Schema (Blu Sprint 1)
 > 4. `@kitsy/canvas` operational (Studio E1-S1 — needed for tree operations in AI edits)
 > 5. Component registry populated with ComponentMeta for all 49 components
 >
@@ -252,10 +252,10 @@
 
 ```
 DEPENDENCY RULES:
-  @kitsy/mind → @kitsy/blu-bus, @kitsy/blu-types, @kitsy/blu-validate, @kitsy/canvas
+  @kitsy/mind → @kitsy/blu-bus, @kitsy/blu-schema, @kitsy/blu-validate, @kitsy/canvas
   @kitsy/mind → @anthropic-ai/sdk (primary LLM provider)
   @kitsy/mind → @kitsy/server (registers effects on server bus)
-  @kitsy/prompts → @kitsy/blu-types (for schema references)
+  @kitsy/prompts → @kitsy/blu-schema (for schema references)
 
 NOT ALLOWED:
   @kitsy/mind → @kitsy/studio (Mind doesn't know about Studio UI)

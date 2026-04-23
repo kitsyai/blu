@@ -1,12 +1,10 @@
 # Kitsy Server — Implementation Specification
 
-**Version:** 1.0  
-**Date:** 2026-03-22  
-**Status:** Implementation-ready companion to *Kitsy Blu — Single Source of Truth v2.0*  
-**Scope:** Phase 2 deliverable — `@kitsy/server`, `@kitsy/protocol`, `@kitsy/blu-sync`  
-**Runtime:** Node.js (migration path to Bun when mature)  
-**License:** BSL (Business Source License)  
-**Read alongside:** Kitsy Blu SSOT §8.4 (Phase 2), §6.9-6.10 (Bus/Transport contracts), §9 (Security)
+**Status:** Canonical — implementation specification for Kitsy Server
+**Scope:** Phase 2 deliverable — `@kitsy/server`, `@kitsy/protocol`, `@kitsy/blu-sync`
+**Runtime:** Node.js (migration path to Bun when mature)
+**License:** BSL (Business Source License)
+**Read first:** `docs/blu/foundation.md`, `docs/blu/architecture.md`, `docs/blu/specification.md` (§1 BluEvent, §8 Bus API, §9 Transport contract, §17 Error semantics), `docs/blu/execution.md`
 
 ---
 
@@ -988,7 +986,7 @@ async function handleGenerateSite(command: Command, { bus, channels }: EffectCon
     // 3. Parse response
     const config = JSON.parse(extractJSON(raw));
 
-    // 4. Validate (7-step pipeline from SSOT §14.2)
+    // 4. Validate envelope and payload via @kitsy/blu-validate (see docs/blu/specification.md §1 envelope, §17 error semantics)
     const validation = validator.fullPipeline(config, componentRegistry);
     if (!validation.valid) {
       // Attempt auto-fix for common issues
@@ -1513,6 +1511,6 @@ KITSY_AI_ANTHROPIC_API_KEY=...
 | `@kitsy/blu-bus` rebrand (Phase 0) | Blu track | Sprint S3 |
 | `@kitsy/blu-validate` (Phase 1) | Blu track | Sprint S4, S9 |
 | `@kitsy/blu-wire` WebSocketTransport (Phase 1) | Blu track | Sprint S10 |
-| `@kitsy/blu-types` JSON Schema (Phase 0) | Blu track | Sprint S4, S9 |
+| `@kitsy/blu-schema` JSON Schema (Phase 0) | Blu track | Sprint S4, S9 |
 
 These can be parallelized: the Blu track ships Phase 0 packages while the server track starts S1-S2 (which don't need Blu packages yet).

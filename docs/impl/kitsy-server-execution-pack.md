@@ -1,11 +1,11 @@
 # Kitsy Server — Execution Pack
 
-**Track:** C (Kitsy Server)  
-**Phase:** 2 (Starts Week 3, after Blu A1-A2 ship)  
-**Owner:** Prashant + Codex agents  
-**Repo:** `github.com/kitsy-ai/kitsy` → `packages/server/`  
-**Spec Document:** Server Implementation Spec  
-**Depends on:** `@kitsy/blu-bus` (A1), `@kitsy/blu-types` (A2), `@kitsy/blu-wire` (A8), `@kitsy/blu-shell/core` (A3)
+**Track:** C (Kitsy Server)
+**Phase:** 2 (Starts after Blu Sprint 2 ships — primitives + bus)
+**Owner:** Prashant + Codex agents
+**Repo:** `github.com/kitsy-ai/kitsy` → `packages/server/`
+**Spec Document:** `docs/specs/kitsy-server-implementation-spec.md`
+**Depends on:** `@kitsy/blu-core` + `@kitsy/blu-schema` + `@kitsy/blu-validate` (Blu Sprint 1), `@kitsy/blu-bus` (Blu Sprint 2), `@kitsy/blu-wire` (Blu Sprint 4), `@kitsy/blu-shell` (Blu Sprint 9)
 
 ---
 
@@ -142,7 +142,7 @@
 **Objective:** Real-time config synchronization between server and connected browsers.
 
 **Ref:** Server Spec §10 (Sync Protocol)  
-**Depends on:** C3 (bus), C4 (config store), A8 (`@kitsy/blu-wire` WebSocketTransport)
+**Depends on:** C3 (bus), C4 (config store), Blu Sprint 4 (`@kitsy/blu-wire` — WebSocketTransport adapter)
 
 | # | Task |
 |---|------|
@@ -201,7 +201,7 @@
 **Objective:** SSR build → CDN deploy → live site serving.
 
 **Ref:** Blu Product Hosting §8 (Publish Pipeline)  
-**Depends on:** A3 (`@kitsy/blu-shell/core` for SSR), C4 (config store)
+**Depends on:** Blu Sprint 9 (`@kitsy/blu-shell` for SSR), C4 (config store)
 
 | # | Task |
 |---|------|
@@ -292,9 +292,9 @@ Server code:
 
 ```
 ALLOWED:
-  @kitsy/server → @kitsy/blu-bus, @kitsy/blu-types, @kitsy/blu-validate, @kitsy/blu-shell/core (SSR)
+  @kitsy/server → @kitsy/blu-bus, @kitsy/blu-schema, @kitsy/blu-validate, @kitsy/blu-shell (SSR)
   @kitsy/server → hono, ws, pg, ioredis, stripe
-  @kitsy/protocol → @kitsy/blu-types (types only)
+  @kitsy/protocol → @kitsy/blu-schema (types only)
   @kitsy/blu-sync → @kitsy/blu-bus, @kitsy/blu-wire, @kitsy/protocol
 
 NOT ALLOWED:

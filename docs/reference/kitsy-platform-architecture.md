@@ -6,7 +6,7 @@
 **Owner:** HEYPKV Innovations Private Limited  
 **Brand:** Kitsy (kitsy.ai)  
 **Scope:** The platform shell, module architecture, shared infrastructure, AI workforce model, and tech offerings that compose into an AI-native ERP  
-**Relationship to other docs:** This is the roof. All product-specific documents (Blu SSOT, Coop, future CRM/Finance/HRM specs) describe individual rooms in the house this document defines.
+**Relationship to other docs:** This is the roof. All product-specific documents (the Blu framework docs at `docs/blu/`, Coop, future CRM/Finance/HRM specs) describe individual rooms in the house this document defines.
 
 ---
 
@@ -526,7 +526,7 @@ CREATE POLICY tenant_isolation ON {module}_some_table
 
 ### 8.1 Bus architecture at platform level
 
-The EventBus designed for Blu (documented in Blu SSOT §6.9-6.10) serves as the platform-wide communication backbone. Every module, every AI agent, every background service participates.
+The event fabric designed for Blu (bus in `docs/blu/specification.md` §8, transport in §9) serves as the platform-wide communication backbone. Every module, every AI agent, every background service participates.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -825,7 +825,7 @@ Search queries are routed to each active module's search endpoint. Results are a
 | **What it does** | Create, edit, and publish websites and web applications |
 | **Key capabilities** | Visual builder (Studio), AI generation (Mind), CDN hosting, custom domains, templates |
 | **Bus namespace** | `blu:*` |
-| **Dedicated docs** | Blu SSOT, Component Spec, Server Spec, Studio Spec, Mind Spec, Blu Product Hosting Spec |
+| **Dedicated docs** | Blu framework (`docs/blu/*.md`), Component Spec, Server Spec, Studio Spec, Mind Spec, Blu Product Hosting Spec |
 | **Crew skills** | `crew:build-site`, `crew:edit-site`, `crew:suggest-theme` |
 
 ### 11.2 Coop — Product & Project Management (Beta)
@@ -1478,7 +1478,9 @@ THIS DOCUMENT (Kitsy Platform Architecture)
   └── defines Crew AI workforce model
 
 PRODUCT-SPECIFIC DOCUMENTS (each describes one module):
-  ├── Blu SSOT                     → Blu module (websites)
+  ├── docs/blu/ (foundation,       → Blu module (websites)
+  │   architecture, specification,
+  │   shell, execution)
   ├── Blu Component Specifications → Blu UI components
   ├── Kitsy Server Spec            → Shared server infrastructure (used by all modules)
   ├── Kitsy Studio Spec            → Blu visual builder
