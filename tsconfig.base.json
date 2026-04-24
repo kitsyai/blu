@@ -1,19 +1,25 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ES2022",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "strict": true,
-    // "declaration": true,
-    // "declarationMap": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": false,
+    "useUnknownInCatchVariables": true,
+    "declaration": true,
+    "declarationMap": true,
     "sourceMap": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "lib": ["DOM", "ES6", "DOM.Iterable", "ESNext"],
-    "jsx": "react-jsx",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": false,
     "allowSyntheticDefaultImports": true,
-    "importHelpers": true
+    "importHelpers": false
   }
 }

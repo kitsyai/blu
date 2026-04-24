@@ -3,7 +3,8 @@
   "compilerOptions": {
     "noEmit": true,
     "allowJs": true,
-    "checkJs": true,
+    "checkJs": false
   },
-  "include": ["scripts", "stories", "build"]
+  "include": ["packages/blu-*/src/**/*", "scripts/**/*"],
+  "exclude": ["**/dist/**", "**/node_modules/**"]
 }

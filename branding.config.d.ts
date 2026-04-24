@@ -7,17 +7,25 @@ export declare const frameworkBrand: Readonly<{
 }>;
 
 export declare const frameworkPackages: Readonly<{
-  shell: string;
+  meta: string;
   core: string;
-  ui: string;
-  context: string;
-  icons: string;
+  schema: string;
+  validate: string;
   bus: string;
-  grid: string;
+  slate: string;
+  wire: string;
   route: string;
+  context: string;
+  shell: string;
+  view: string;
+  ui: string;
+  icons: string;
+  grid: string;
   style: string;
-  blocks: string;
   templates: string;
+  blocks: string;
+  devtools: string;
+  cli: string;
 }>;
 
 export declare const frameworkBundles: Readonly<{
@@ -29,22 +37,12 @@ export declare const frameworkBundles: Readonly<{
 export declare const frameworkCss: Readonly<{
   shell: string;
   shellMin: string;
-  material: string;
-  materialMin: string;
-  materialLegacy: string;
-  materialLegacyMin: string;
-  ant: string;
-  antMin: string;
-  core: string;
-  coreMin: string;
   ui: string;
   uiMin: string;
   grid: string;
   gridMin: string;
-  blocks: string;
-  blocksMin: string;
   style: string;
   styleMin: string;
-  styleLegacy: string;
-  styleLegacyMin: string;
+  blocks: string;
+  blocksMin: string;
 }>;

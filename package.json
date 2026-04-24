@@ -2,74 +2,34 @@
   "name": "kitsy-blu-workspace",
   "private": true,
   "type": "module",
+  "version": "1.0.0-dev",
+  "description": "Blu — event-first, schema-driven UI framework. Workspace root.",
+  "license": "SEE LICENSE IN LICENSE",
+  "author": "Prashant Sinha",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kitsy-ai/kitsy.git"
+  },
   "scripts": {
-    "test": "vitest run",
     "build": "turbo run build",
-    "build:css": "pnpm -r --filter ./packages/* run prebuild",
-    "dev": "turbo run dev --parallel",
-    "pack:all": "pnpm run build && pnpm -r pack",
-    "clean:all": "pnpm -r run rimraf packages/**/dist",
-    "prettier": "prettier --write packages",
-    "theme:flat": "node scripts/build-tokens.js default",
-    "theme:material": "node scripts/build-tokens.js material",
-    "theme:neumorphism": "node scripts/build-tokens.js neumorphism"
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "lint": "prettier --check \"packages/blu-*/src/**/*.{ts,tsx,js,jsx,json}\"",
+    "format": "prettier --write \"packages/blu-*/src/**/*.{ts,tsx,js,jsx,json}\"",
+    "clean": "turbo run clean && rimraf node_modules .turbo",
+    "fresh": "pnpm clean && pnpm install"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.6",
-    "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "@rollup/plugin-replace": "^6.0.2",
-    "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^12.1.4",
-    "@types/js-yaml": "^4.0.9",
     "@types/node": "^24.6.0",
-    "@types/react": "19.1.0",
-    "@types/react-dom": "19.1.0",
-    "autoprefixer": "^10.4.21",
-    "baseline-browser-mapping": "^2.9.8",
-    "cross-env": "^10.1.0",
-    "cssnano": "^7.1.1",
-    "js-yaml": "^4.1.0",
-    "postcss": "^8.5.6",
-    "postcss-cli": "^11.0.1",
-    "postcss-import": "^16.1.1",
-    "postcss-nesting": "^13.0.2",
     "prettier": "^3.6.2",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
     "rimraf": "^6.0.1",
-    "rollup": "^4.46.1",
-    "rollup-plugin-dts": "^6.2.3",
-    "rollup-plugin-postcss": "^4.0.2",
     "tsx": "^4.20.6",
     "turbo": "^2.5.5",
     "typescript": "^5.8.3",
     "vitest": "^4.0.16"
   },
-  "peerDependencies": {
-    "react": ">=18.2.0 <20",
-    "react-dom": ">=18.2.0 <20"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": false
-    },
-    "react-dom": {
-      "optional": false
-    }
-  },
-  "resolutions": {
-    "react": ">=18.2.0 <20",
-    "react-dom": ">=18.2.0 <20"
-  },
-  "pnpm": {
-    "overrides": {
-      "react": ">=18.2.0 <20",
-      "react-dom": ">=18.2.0 <20"
-    }
-  },
   "packageManager": "pnpm@10.13.1",
-  "dependencies": {
-    "tslib": "^2.8.1"
+  "engines": {
+    "node": ">=20"
   }
 }
