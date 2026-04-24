@@ -1,0 +1,61 @@
+{
+  "name": "@kitsy/blu-context",
+  "version": "1.0.0-dev.0",
+  "description": "React provider and hooks for wiring Blu bus and slate instances into application components.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kitsy-ai/kitsy.git",
+    "directory": "packages/blu-context"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "author": "Prashant Sinha",
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.build.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rimraf dist .turbo"
+  },
+  "dependencies": {
+    "@kitsy/blu-bus": "workspace:*",
+    "@kitsy/blu-core": "workspace:*",
+    "@kitsy/blu-slate": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "jsdom": "^26.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.8.3",
+    "vitest": "^4.0.16"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
