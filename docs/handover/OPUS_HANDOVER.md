@@ -30,13 +30,14 @@ Phase one is being built bottom-up per `docs/blu/execution.md`:
 3. Stage 3 - view and authoring surface
 4. Stage 4 - shell, tooling, release hardening
 
-Sprint 1, Sprint 2, and Sprint 3 are now complete:
+Sprint 1 through Sprint 4 are now complete:
 
 - Sprint 1: `@kitsy/blu-core`, `@kitsy/blu-schema`, `@kitsy/blu-validate`
 - Sprint 2: `@kitsy/blu-bus`
 - Sprint 3: `@kitsy/blu-slate`
+- Sprint 4: `@kitsy/blu-wire`
 
-Sprint 4 (`@kitsy/blu-wire`) is next.
+Sprint 5 (`@kitsy/blu-context`) is next.
 
 ### Important principles
 
@@ -73,11 +74,12 @@ Sprint 4 (`@kitsy/blu-wire`) is next.
 
 **Critical sections for the next agent:**
 
-- `docs/blu/execution.md` section 2.1 - Sprint 4 (`blu-wire`) spec and exit criteria
+- `docs/blu/execution.md` section 2.1 - Sprint 5 (`blu-context`) spec and exit criteria
 - `docs/blu/execution.md` section 3 - dependency rules
-- `docs/blu/specification.md` sections 1, 3, 4, 7, and 9 - envelope, durability, origin/causality, slate API, transport contract
-- `packages/blu-core/src/event.ts`, `durability.ts`, `index.ts`
+- `docs/blu/specification.md` sections 7, 8, 9, and 16 - slate API, bus API, transport contract, React hooks
+- `packages/blu-bus/src/bus.ts`
 - `packages/blu-slate/src/slate.ts`
+- `packages/blu-wire/src/transport.ts`
 
 ---
 
@@ -130,12 +132,21 @@ Sprint 4 (`@kitsy/blu-wire`) is next.
 - `src/index.ts`
 - `src/slate.test.ts`
 
+**`packages/blu-wire/` (Sprint 4):**
+
+- `package.json`, `tsconfig.json`, `tsconfig.build.json`, `vitest.config.ts`
+- `src/transport.ts` - transport contract, lifecycle event types, status tracking base class
+- `src/local-transport.ts` - deterministic in-process transport for tests
+- `src/broadcast-channel-transport.ts` - `BroadcastChannel` transport with injectable constructor for testability
+- `src/index.ts`
+- `src/wire.test.ts`
+
 ### Files modified
 
 - `packages/blu-core/src/event.ts`
   Fixed a real Sprint 1 type bug during Sprint 2: `PartialEvent<T>` now makes `causationId`, `correlationId`, `scopePath`, and `origin` truly optional, matching the documented bus contract.
 - `pnpm-lock.yaml`
-  Updated as new workspace packages were added.
+  Updated as workspace packages were added.
 
 ### Components / modules added
 
@@ -144,6 +155,7 @@ Sprint 4 (`@kitsy/blu-wire`) is next.
 - `@kitsy/blu-validate`
 - `@kitsy/blu-bus`
 - `@kitsy/blu-slate`
+- `@kitsy/blu-wire`
 
 ### What is wired
 
@@ -151,7 +163,8 @@ Sprint 4 (`@kitsy/blu-wire`) is next.
 - `turbo` orchestrates build / test / typecheck across the workspace
 - `@kitsy/blu-bus` imports only `@kitsy/blu-core` and `@kitsy/blu-validate`
 - `@kitsy/blu-slate` imports only `@kitsy/blu-core`
-- All five workspace packages emit `dist/` with `.js`, `.d.ts`, and `.d.ts.map`
+- `@kitsy/blu-wire` imports only `@kitsy/blu-core`
+- All six workspace packages emit `dist/` with `.js`, `.d.ts`, and `.d.ts.map`
 
 ### What is mock / no-op
 
@@ -160,10 +173,11 @@ Sprint 4 (`@kitsy/blu-wire`) is next.
 
 ### What is incomplete
 
-- Stage 1 is not yet complete; Sprint 4 (`blu-wire`) remains before the Stage 1 gate
+- Stage 2 is not yet complete; Sprint 5 (`blu-context`) and Sprint 6 (`blu-devtools`) remain before the Stage 2 gate
 - No per-package `CHANGELOG.md` files yet
 - No ESLint config yet; `pnpm lint` is currently a Prettier check
-- `blu-slate` is in-memory only for now; IndexedDB persistence is still open for the Stage 1 gate path
+- `blu-slate` is still in-memory only; IndexedDB persistence remains open for the Stage 1 gate path
+- `blu-wire` currently emits transport-local lifecycle events; higher-layer projection of those onto the bus is still a later wiring concern
 
 ### Known errors / warnings
 
@@ -174,21 +188,25 @@ Sprint 4 (`@kitsy/blu-wire`) is next.
 ```text
 pnpm install
   -> workspace dependencies installed successfully
+  note: on this Windows checkout, adding `packages/blu-wire` again required a
+         one-time `pnpm install --force --config.confirmModulesPurge=false`
+         relink so the new workspace package was wired cleanly
 
 pnpm -r build
-  -> 5 packages built clean
-     blu-core, blu-schema, blu-validate, blu-bus, blu-slate
+  -> 6 packages built clean
+     blu-core, blu-schema, blu-validate, blu-bus, blu-slate, blu-wire
 
 pnpm -r typecheck
-  -> 5 packages clean
+  -> 6 packages clean
 
 pnpm -r test
-  -> 138 / 138 passing
+  -> 145 / 145 passing
      blu-core     51 / 51   (7 files)
      blu-schema   11 / 11   (1 file)
      blu-validate 58 / 58   (8 files)
      blu-bus       9 /  9   (1 file)
      blu-slate     9 /  9   (1 file)
+     blu-wire      7 /  7   (1 file)
 
 pnpm lint
   -> clean
@@ -312,15 +330,7 @@ Deliver `@kitsy/blu-slate` - the journal, projection engine, authority enforceme
 - Implemented a `derived-only` companion API in `blu-slate` so derived projections recompute from named source projections without appending synthetic journal events
 - Implemented snapshots and compaction using a global snapshot handle keyed to the slate instance and journal sequence
 - Implemented replay that rebuilds projection state and re-dispatches journal events with `origin: "replay"`
-- Added a focused 9-test Sprint 3 suite covering:
-  - journal ordering and filtering
-  - projection registration and memoization
-  - authority rejection paths
-  - snapshot + compaction round-trip
-  - replay fidelity
-  - derived projection recomputation without journal churn
-  - pending-sequence assignment
-  - duplicate event handling
+- Added a focused 9-test Sprint 3 suite covering journal ordering, memoization, authority rejection, snapshot/compaction round-trip, replay fidelity, derived projection recomputation, pending-sequence assignment, and duplicate event handling
 
 ### Files touched
 
@@ -347,45 +357,111 @@ Deliver `@kitsy/blu-slate` - the journal, projection engine, authority enforceme
 
 ---
 
-## Sprint 4 - Next Work
+## Sprint 4 - Current Completed Work
 
-**Status: Ready to Start**
+**Status: Done**
 
 ### Goal
 
 Deliver `@kitsy/blu-wire` - the transport contract and the first two adapters: `LocalTransport` and `BroadcastChannelTransport`, with idempotent receive, connection lifecycle, and status eventing.
 
-Per `docs/blu/execution.md` section 2.1, "Sprint 4 - blu-wire".
+### Completed
+
+- Scaffolded `packages/blu-wire/` with standard workspace package metadata and TS/Vitest config
+- Implemented the transport contract in `src/transport.ts`
+- Added a shared `BaseTransport` with:
+  - `status`
+  - `receive()` subscription
+  - transport-local lifecycle subscriptions
+  - finalized `sync:*` lifecycle events including `sync:transport:error` and `sync:session:resumed`
+- Implemented `LocalTransport` as an in-process, deterministic transport for replicated event tests
+- Implemented `BroadcastChannelTransport` with:
+  - injectable `BroadcastChannel` constructor for testability
+  - lifecycle/status handling
+  - peer delivery for replicated events
+  - startup error reporting via lifecycle events
+- Chose to keep lifecycle/status events transport-local for Sprint 4, matching the no-bus-import guardrail; later layers can bridge those onto the bus/slate boundary
+- Added a focused 7-test Sprint 4 suite covering:
+  - in-process propagation
+  - deduplicated receive expectations
+  - two-way `BroadcastChannelTransport` replication
+  - transport error and resumed lifecycle events
+  - non-replicated/disconnected rejection paths
+  - deterministic ordering under concurrent local offers
+  - lifecycle subscription behavior
+
+### Files touched
+
+- `packages/blu-wire/package.json`
+- `packages/blu-wire/tsconfig.json`
+- `packages/blu-wire/tsconfig.build.json`
+- `packages/blu-wire/vitest.config.ts`
+- `packages/blu-wire/src/transport.ts`
+- `packages/blu-wire/src/local-transport.ts`
+- `packages/blu-wire/src/broadcast-channel-transport.ts`
+- `packages/blu-wire/src/index.ts`
+- `packages/blu-wire/src/wire.test.ts`
+- `pnpm-lock.yaml`
+
+### Verification
+
+- `pnpm install` -> clean after one forced relink for the new workspace package
+- `pnpm -r build` -> clean across 6 packages
+- `pnpm -r typecheck` -> clean across 6 packages
+- `pnpm -r test` -> 145 / 145 passing
+- `pnpm lint` -> clean
+
+### Remaining
+
+- `blu-wire` does not yet wire lifecycle events into the bus; that remains a higher-layer integration concern
+
+---
+
+## Sprint 5 - Next Work
+
+**Status: Ready to Start**
+
+### Goal
+
+Deliver `@kitsy/blu-context` and the React binding: `<BluProvider>`, `useEmit`, `useProjection`, `useDataSource`, `useSlate`, `useBus`, `useEventSubscription`.
+
+Per `docs/blu/execution.md` section 2.1, "Sprint 5 - blu-context and the React binding".
 
 ### Reference docs
 
-- `docs/blu/execution.md` section 2.1 (Sprint 4), section 3 (dependency rules), section 4 (quality rules)
-- `docs/blu/specification.md` sections 3, 7, and 9
-- `docs/blu/architecture.md` section 7.1 (`blu-wire`)
-- `packages/blu-core/src/event.ts`, `durability.ts`, `index.ts`
+- `docs/blu/execution.md` section 2.1 (Sprint 5), section 3 (dependency rules), section 4 (quality rules)
+- `docs/blu/specification.md` sections 7, 8, and 16
+- `docs/blu/architecture.md` section 6.2 (`blu-context`)
+- `packages/blu-bus/src/bus.ts`
 - `packages/blu-slate/src/slate.ts`
+- `packages/blu-wire/src/transport.ts`
 
 ### Tasks
 
-1. Scaffold `packages/blu-wire/` with `package.json`, TS configs, and Vitest config.
-2. Define the transport contract and public transport types.
-3. Implement `LocalTransport` for in-process transport testing.
-4. Implement `BroadcastChannelTransport` for cross-tab browser transport.
-5. Ensure idempotent receive paths and transport lifecycle/status handling.
-6. Add tests for:
-   - cross-instance propagation
-   - duplicate event deduplication on the receiving slate
-   - disconnect / reconnect behavior
-   - ordering under concurrent writes
+1. Scaffold `packages/blu-context/` with `package.json`, TS configs, and Vitest config.
+2. Implement `<BluProvider>` wiring for bus and slate instances.
+3. Implement hooks:
+   - `useEmit`
+   - `useProjection`
+   - `useDataSource`
+   - `useSlate`
+   - `useBus`
+   - `useEventSubscription`
+4. Ensure correct subscription cleanup and minimal re-render behavior.
+5. Add tests for:
+   - provider wiring
+   - re-render correctness
+   - unmount cleanup
+   - context nesting
 
 ### Acceptance Criteria
 
-Per `docs/blu/execution.md` Sprint 4 exit criteria:
+Per `docs/blu/execution.md` Sprint 5 exit criteria:
 
-- Two slates in the same process, connected by `BroadcastChannelTransport`, replicate a `replicated`-durability event in both directions with deterministic ordering
-- Duplicate event IDs at the receiving slate are deduplicated silently
-- Transport disconnection emits `sync:transport:error`; reconnection emits `sync:session:resumed`
-- Tests cover cross-tab propagation, idempotency, disconnection behavior, and ordering under concurrent writes
+- A React component mounted under `<BluProvider>` can emit, read projections, and update DOM in response to events
+- Re-renders fire only when the consumed projection changes, verified by render counters
+- A parent projection subscription does not cause child re-renders if the child reads a different projection
+- Tests cover provider wiring, re-render correctness, unmount cleanup, and context nesting
 
 ---
 
@@ -393,9 +469,8 @@ Per `docs/blu/execution.md` Sprint 4 exit criteria:
 
 Listed for orientation only. Do not implement ahead.
 
-- Stage 2 gate - React app under provider can emit events, read projections, cross-tab sync, and inspect itself in devtools
-- Sprint 5 - `blu-context`
 - Sprint 6 - `blu-devtools`
+- Stage 2 gate - React app under provider can emit events, read projections, cross-tab sync, and inspect itself in devtools
 - Sprint 7 - `blu-view`
 - Sprint 8 - schema actions, data sources, forms
 - Sprint 9 - `blu-shell` plus view library packages
@@ -409,19 +484,21 @@ Listed for orientation only. Do not implement ahead.
 2. Then read, in order:
    - `docs/blu/foundation.md`
    - `docs/blu/architecture.md`
-   - `docs/blu/specification.md` (focus on durability, causality, slate API, transport contract)
-   - `docs/blu/execution.md` section 2.1 (Sprint 4) and section 3 (dependency rules)
-3. Inspect the Stage 1 deliverables before writing Sprint 4 code:
-   - `packages/blu-core/src/event.ts`, `durability.ts`, `index.ts`
+   - `docs/blu/specification.md` (focus on slate API, bus API, transport contract, React hooks)
+   - `docs/blu/execution.md` section 2.1 (Sprint 5) and section 3 (dependency rules)
+3. Inspect the Stage 2 deliverables before writing Sprint 5 code:
+   - `packages/blu-bus/src/bus.ts`
    - `packages/blu-slate/src/slate.ts`
-4. Implement Sprint 4 only. Do not start Sprint 5.
-5. Files to edit: new files under `packages/blu-wire/` only, unless Sprint 4 exposes a real bug in an earlier package.
+   - `packages/blu-wire/src/transport.ts`
+4. Implement Sprint 5 only. Do not start Sprint 6.
+5. Files to edit: new files under `packages/blu-context/` only, unless Sprint 5 exposes a real bug in an earlier package.
 6. Files not to touch unless a real bug forces it:
    - `packages/blu-core/`
    - `packages/blu-schema/`
    - `packages/blu-validate/`
    - `packages/blu-bus/`
    - `packages/blu-slate/`
+   - `packages/blu-wire/`
    - root tooling files
    - anything under `docs/` other than this handover update
 7. Verification commands that must pass before reporting done:
@@ -434,7 +511,7 @@ pnpm -r test
 pnpm lint
 ```
 
-Existing 138 tests must remain green. Sprint 4 must add coverage for `blu-wire`.
+Existing 145 tests must remain green. Sprint 5 must add coverage for `blu-context`.
 
 ---
 
@@ -442,9 +519,9 @@ Existing 138 tests must remain green. Sprint 4 must add coverage for `blu-wire`.
 
 - Do not redesign the architecture.
 - Do not refactor unrelated code.
-- `blu-wire` may import only `@kitsy/blu-core`.
-- Preserve the bus/slate/transport split: `blu-wire` defines transports and does not absorb slate logic.
-- Preserve the event, durability, causality, and transport contracts from the specification.
+- `blu-context` imports `@kitsy/blu-core`, `@kitsy/blu-bus`, `@kitsy/blu-slate`, and React only.
+- Preserve the bus/slate/context split: `blu-context` is thin wiring, not a place to absorb runtime logic from lower layers.
+- Preserve the existing event, projection, replay, and transport contracts.
 - Keep `ESM-only`, `sideEffects: false`, TS strict, no `any` in public signatures.
 - Do not create package README or CLAUDE files unless explicitly asked.
 - If a real bug in an earlier package forces a change, document it in section 3 before proceeding.
@@ -455,11 +532,12 @@ Existing 138 tests must remain green. Sprint 4 must add coverage for `blu-wire`.
 
 | Question | Current leaning | Needed before |
 |---|---|---|
-| Should `LocalTransport` deliver offered events synchronously or queue them to the next microtask? | Start synchronous for determinism in tests unless ordering bugs force queueing. | Sprint 4 LocalTransport implementation |
-| How should `BroadcastChannelTransport` expose status in non-browser test environments? | Provide a transport-level status state machine and gate the actual channel creation behind environment checks or injectable constructors. | Sprint 4 testability design |
-| Where should `sync:transport:error` and `sync:session:resumed` be emitted if `blu-wire` cannot import `blu-bus`? | Keep transport status as transport-local state/events first; let later wiring layers project them onto the bus/slate boundary. | Sprint 4 lifecycle design |
-| Is IndexedDB persistence required before the Stage 1 gate, or can the gate initially be demonstrated with in-memory slate plus snapshot/compaction/replay? | The current slate is in-memory only; IndexedDB should be deferred unless the Stage 1 gate explicitly requires it before Sprint 4 closes. | Stage 1 gate planning |
-| ESLint config - adopt now or after Sprint 4? | After Sprint 4. Prettier-only lint is still sufficient for now. | Stage 1 gate |
+| Should `<BluProvider>` construct default bus/slate instances or require them as explicit props? | Prefer explicit props first to keep the provider honest and testable; add defaults only if the Sprint 5 ergonomics demand them. | Sprint 5 provider API design |
+| How should `useProjection()` minimize re-renders with the current slate subscription surface? | Start with subscription-per-hook and local state updates keyed to one projection; avoid broader context invalidation. | Sprint 5 hook implementation |
+| Should `useEventSubscription()` use the raw bus filter types directly or wrap them in React-specific helpers? | Use the raw bus filter contract directly to avoid creating a second mental model. | Sprint 5 hook API design |
+| Where should `sync:transport:error` and `sync:session:resumed` become visible to app code? | Keep them transport-local in `blu-wire` for now and bridge them onto the bus at the integration layer when `blu-context` or a later layer owns that wiring. | Sprint 5 or Sprint 6 integration decision |
+| Is IndexedDB persistence required before the Stage 2 gate, or can the gate initially proceed with in-memory slate plus transport? | The slate is still in-memory only; defer persistence unless the Stage 1 or Stage 2 gate explicitly forces it first. | Stage gate planning |
+| ESLint config - adopt now or after Sprint 5? | After Sprint 5. Prettier-only lint is still sufficient for now. | Stage 2 gate |
 | Per-package `CHANGELOG.md`? | Add at first publish, not now. | First alpha publish |
 
 ---
@@ -470,42 +548,43 @@ Copy-paste prompt for the next coding agent:
 
 ---
 
-> You are continuing work on the Blu framework (event-first, schema-driven UI). Sprint 1, Sprint 2, and Sprint 3 are complete; this handover reflects the current repo state after `@kitsy/blu-slate`.
+> You are continuing work on the Blu framework (event-first, schema-driven UI). Sprint 1 through Sprint 4 are complete; this handover reflects the current repo state after `@kitsy/blu-wire`.
 >
 > **Step 1 - Read these in order, no skipping:**
 > 1. `docs/handover/OPUS_HANDOVER.md` (full file)
 > 2. `docs/blu/foundation.md`
 > 3. `docs/blu/architecture.md`
-> 4. `docs/blu/specification.md` (focus on durability, causality, slate API, and transport contract)
-> 5. `docs/blu/execution.md` section 2.1 (Sprint 4 spec) and section 3 (dependency rules)
-> 6. `packages/blu-core/src/event.ts`, `durability.ts`, `index.ts`
+> 4. `docs/blu/specification.md` (focus on slate API, bus API, transport contract, and React hooks)
+> 5. `docs/blu/execution.md` section 2.1 (Sprint 5 spec) and section 3 (dependency rules)
+> 6. `packages/blu-bus/src/bus.ts`
 > 7. `packages/blu-slate/src/slate.ts`
+> 8. `packages/blu-wire/src/transport.ts`
 >
-> **Step 2 - Scope:** Implement **Sprint 4 only** - `@kitsy/blu-wire`. The full task list and acceptance criteria are in `docs/handover/OPUS_HANDOVER.md` section 4 "Sprint 4 - Next Work".
+> **Step 2 - Scope:** Implement **Sprint 5 only** - `@kitsy/blu-context`. The full task list and acceptance criteria are in `docs/handover/OPUS_HANDOVER.md` section 4 "Sprint 5 - Next Work".
 >
 > **Step 3 - Guardrails (do not violate):**
 > - Do not redesign the architecture. Do not refactor unrelated code.
-> - Do not modify `packages/blu-core/`, `packages/blu-schema/`, `packages/blu-validate/`, `packages/blu-bus/`, or `packages/blu-slate/` unless you find a real bug - and if you do, document it in the handover before proceeding.
-> - `blu-wire` may import only `@kitsy/blu-core`.
-> - Preserve the bus/slate/transport split. `blu-wire` defines transports and does not absorb slate logic.
+> - Do not modify `packages/blu-core/`, `packages/blu-schema/`, `packages/blu-validate/`, `packages/blu-bus/`, `packages/blu-slate/`, or `packages/blu-wire/` unless you find a real bug - and if you do, document it in the handover before proceeding.
+> - `blu-context` imports only `@kitsy/blu-core`, `@kitsy/blu-bus`, `@kitsy/blu-slate`, and React.
+> - Preserve the bus/slate/context split. `blu-context` is thin wiring, not a place to absorb lower-layer runtime logic.
 > - TypeScript strict, ESM-only, `sideEffects: false`, no `any` in public signatures, JSDoc on public functions, >=80% coverage, vitest only.
 > - Workspace package name pattern is `@kitsy/blu-*`, version `1.0.0-dev.0`.
 > - Do not create CLAUDE.md or README files unless explicitly asked.
 >
-> **Step 4 - Files you will create:** new files under `packages/blu-wire/` only (`package.json`, `tsconfig.json`, `tsconfig.build.json`, `vitest.config.ts`, `src/*.ts`, `src/*.test.ts`).
+> **Step 4 - Files you will create:** new files under `packages/blu-context/` only (`package.json`, `tsconfig.json`, `tsconfig.build.json`, `vitest.config.ts`, `src/*.ts`, `src/*.test.ts`).
 >
 > **Step 5 - Verification (must all pass before you report done):**
 > ```
 > pnpm install
 > pnpm -r build
 > pnpm -r typecheck
-> pnpm -r test     # existing 138 tests must remain green; Sprint 4 must add coverage
+> pnpm -r test     # existing 145 tests must remain green; Sprint 5 must add coverage
 > pnpm lint
 > ```
 >
-> **Step 6 - Update the handover.** When Sprint 4 is complete, edit `docs/handover/OPUS_HANDOVER.md`:
-> - Move Sprint 4 from "Next Work" to "Current Completed Work" (mark as Done with file list and verification output).
-> - Add Sprint 5 (`blu-context`) as the new "Next Work" using the spec in `docs/blu/execution.md` section 2.1.
+> **Step 6 - Update the handover.** When Sprint 5 is complete, edit `docs/handover/OPUS_HANDOVER.md`:
+> - Move Sprint 5 from "Next Work" to "Current Completed Work" (mark as Done with file list and verification output).
+> - Add Sprint 6 (`blu-devtools`) as the new "Next Work" using the spec in `docs/blu/execution.md` section 2.1.
 > - Update section 3 "Current Repo State" with the new package and refreshed test counts.
 > - Resolve or update section 7 "Open Questions" based on choices you made.
 >
