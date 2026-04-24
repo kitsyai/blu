@@ -32,10 +32,6 @@ export {
   authorityAcceptsReplication,
 } from "./authority.js";
 
-export {
-  createEventId,
-  isEventId,
-  eventIdTimestamp,
-} from "./event-id.js";
+export { createEventId, isEventId, eventIdTimestamp } from "./event-id.js";
 export { applyEnvelopeDefaults, ENVELOPE_DEFAULTS } from "./envelope.js";
 export { propagateCausality, isCausalRoot } from "./causality.js";

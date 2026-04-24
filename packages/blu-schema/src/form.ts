@@ -18,7 +18,14 @@ export interface FormDefinition {
 
 /** Per-field shape declaration. */
 export interface FormField {
-  type: "text" | "number" | "boolean" | "date" | "select" | "multiselect" | "file";
+  type:
+    | "text"
+    | "number"
+    | "boolean"
+    | "date"
+    | "select"
+    | "multiselect"
+    | "file";
   required?: boolean;
   default?: unknown;
   /** Choice list for `select` and `multiselect`. */

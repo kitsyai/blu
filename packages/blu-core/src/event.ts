@@ -56,11 +56,16 @@ export interface BluEvent<TPayload = unknown> {
  */
 export type PartialEvent<TPayload = unknown> = Omit<
   BluEvent<TPayload>,
-  "eventId" | "timestamp" | "sequence"
-> &
-  Partial<
-    Pick<
-      BluEvent<TPayload>,
-      "causationId" | "correlationId" | "scopePath" | "origin"
-    >
-  >;
+  | "eventId"
+  | "timestamp"
+  | "sequence"
+  | "causationId"
+  | "correlationId"
+  | "scopePath"
+  | "origin"
+> & {
+  causationId?: BluEvent<TPayload>["causationId"];
+  correlationId?: BluEvent<TPayload>["correlationId"];
+  scopePath?: BluEvent<TPayload>["scopePath"];
+  origin?: BluEvent<TPayload>["origin"];
+};

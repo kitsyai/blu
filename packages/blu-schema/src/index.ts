@@ -6,11 +6,7 @@
  */
 
 export type { ApplicationConfiguration } from "./application.js";
-export type {
-  ViewNode,
-  RepeatDirective,
-  ViewReference,
-} from "./view-node.js";
+export type { ViewNode, RepeatDirective, ViewReference } from "./view-node.js";
 export type {
   Value,
   PropValue,

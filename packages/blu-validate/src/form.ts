@@ -31,7 +31,11 @@ export function validateFormDefinitionInto(
     c.push("form.missing.id", "FormDefinition.id is required", "id");
   }
   if (!isObject(form.fields)) {
-    c.push("form.missing.fields", "FormDefinition.fields must be an object", "fields");
+    c.push(
+      "form.missing.fields",
+      "FormDefinition.fields must be an object",
+      "fields",
+    );
   } else {
     for (const [name, field] of Object.entries(form.fields)) {
       const fc = c.child("fields").child(name);
@@ -46,7 +50,10 @@ export function validateFormDefinitionInto(
           "type",
         );
       }
-      if ((field.type === "select" || field.type === "multiselect") && field.enum !== undefined) {
+      if (
+        (field.type === "select" || field.type === "multiselect") &&
+        field.enum !== undefined
+      ) {
         if (!Array.isArray(field.enum)) {
           fc.push(
             "form.field.invalid.enum",
@@ -81,17 +88,32 @@ export function validateFormDefinitionInto(
       form.validation.forEach((rule, i) => {
         const rc = c.child("validation").child(i);
         if (!isObject(rule)) {
-          rc.push("form.validation.shape.notObject", "ValidationRule must be an object");
+          rc.push(
+            "form.validation.shape.notObject",
+            "ValidationRule must be an object",
+          );
           return;
         }
         if (typeof rule.id !== "string" || rule.id.length === 0) {
-          rc.push("form.validation.missing.id", "ValidationRule.id is required", "id");
+          rc.push(
+            "form.validation.missing.id",
+            "ValidationRule.id is required",
+            "id",
+          );
         }
         if (typeof rule.message !== "string" || rule.message.length === 0) {
-          rc.push("form.validation.missing.message", "ValidationRule.message is required", "message");
+          rc.push(
+            "form.validation.missing.message",
+            "ValidationRule.message is required",
+            "message",
+          );
         }
         if (rule.when === undefined) {
-          rc.push("form.validation.missing.when", "ValidationRule.when is required", "when");
+          rc.push(
+            "form.validation.missing.when",
+            "ValidationRule.when is required",
+            "when",
+          );
         }
       });
     }

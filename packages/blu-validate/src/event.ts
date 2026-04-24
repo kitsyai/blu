@@ -63,7 +63,10 @@ function validateEnvelopeFields(
         "eventId",
       );
     }
-    if (typeof event.timestamp !== "number" || !Number.isFinite(event.timestamp)) {
+    if (
+      typeof event.timestamp !== "number" ||
+      !Number.isFinite(event.timestamp)
+    ) {
       c.push(
         "envelope.missing.timestamp",
         "timestamp must be a finite number",
@@ -99,7 +102,10 @@ function validateEnvelopeFields(
     );
   }
 
-  if (typeof event.schemaVersion !== "number" || !Number.isInteger(event.schemaVersion)) {
+  if (
+    typeof event.schemaVersion !== "number" ||
+    !Number.isInteger(event.schemaVersion)
+  ) {
     c.push(
       "envelope.invalid.schemaVersion",
       "schemaVersion must be an integer",
@@ -131,7 +137,11 @@ function validateEnvelopeFields(
 
   // Payload — must be present (even as null or {}) so consumers can rely on the key.
   if (!("payload" in event)) {
-    c.push("envelope.missing.payload", "payload key is required (may be null)", "payload");
+    c.push(
+      "envelope.missing.payload",
+      "payload key is required (may be null)",
+      "payload",
+    );
   }
 
   // Context
@@ -188,7 +198,10 @@ function validateEnvelopeFields(
       );
     }
   } else if (event.correlationId !== undefined) {
-    if (typeof event.correlationId !== "string" || !isEventId(event.correlationId)) {
+    if (
+      typeof event.correlationId !== "string" ||
+      !isEventId(event.correlationId)
+    ) {
       c.push(
         "envelope.invalid.correlationId",
         "correlationId, when present, must be a valid ULID",

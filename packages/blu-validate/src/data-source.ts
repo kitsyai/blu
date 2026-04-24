@@ -43,9 +43,16 @@ export function validateDataSourceInto(
   switch (kind) {
     case "rest":
       if (!isStringOrBinding(source.url)) {
-        c.push("data-source.rest.invalid.url", "rest.url must be a string or Binding", "url");
+        c.push(
+          "data-source.rest.invalid.url",
+          "rest.url must be a string or Binding",
+          "url",
+        );
       }
-      if (source.method !== undefined && (typeof source.method !== "string" || !REST_METHODS.has(source.method))) {
+      if (
+        source.method !== undefined &&
+        (typeof source.method !== "string" || !REST_METHODS.has(source.method))
+      ) {
         c.push(
           "data-source.rest.invalid.method",
           "rest.method must be one of: GET, POST, PUT, DELETE, PATCH",
@@ -55,31 +62,55 @@ export function validateDataSourceInto(
       break;
     case "graphql":
       if (!isStringOrBinding(source.endpoint)) {
-        c.push("data-source.graphql.invalid.endpoint", "graphql.endpoint must be a string or Binding", "endpoint");
+        c.push(
+          "data-source.graphql.invalid.endpoint",
+          "graphql.endpoint must be a string or Binding",
+          "endpoint",
+        );
       }
       if (typeof source.query !== "string" || source.query.length === 0) {
-        c.push("data-source.graphql.missing.query", "graphql.query is required", "query");
+        c.push(
+          "data-source.graphql.missing.query",
+          "graphql.query is required",
+          "query",
+        );
       }
       break;
     case "static":
       if (!("data" in source)) {
-        c.push("data-source.static.missing.data", "static.data is required", "data");
+        c.push(
+          "data-source.static.missing.data",
+          "static.data is required",
+          "data",
+        );
       }
       break;
     case "bus":
       if (!Array.isArray(source.on) || source.on.length === 0) {
-        c.push("data-source.bus.missing.on", "bus.on must be a non-empty array of event types", "on");
+        c.push(
+          "data-source.bus.missing.on",
+          "bus.on must be a non-empty array of event types",
+          "on",
+        );
       } else {
         source.on.forEach((t, i) => {
           if (typeof t !== "string" || t.length === 0) {
-            c.child("on").push("data-source.bus.invalid.on", "bus.on entries must be non-empty strings", i);
+            c.child("on").push(
+              "data-source.bus.invalid.on",
+              "bus.on entries must be non-empty strings",
+              i,
+            );
           }
         });
       }
       break;
     case "projection":
       if (typeof source.from !== "string" || source.from.length === 0) {
-        c.push("data-source.projection.missing.from", "projection.from is required", "from");
+        c.push(
+          "data-source.projection.missing.from",
+          "projection.from is required",
+          "from",
+        );
       }
       break;
   }

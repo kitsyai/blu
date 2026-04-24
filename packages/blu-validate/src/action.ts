@@ -15,10 +15,7 @@ export function validateAction(action: unknown): Result<Action> {
   return ok(action as Action);
 }
 
-export function validateActionInto(
-  action: unknown,
-  c: ErrorCollector,
-): void {
+export function validateActionInto(action: unknown, c: ErrorCollector): void {
   if (!isObject(action)) {
     c.push("action.shape.notObject", "Action must be an object");
     return;
@@ -35,16 +32,28 @@ export function validateActionInto(
   switch (kind) {
     case "navigate":
       if (!isStringOrBinding(action.to)) {
-        c.push("action.navigate.invalid.to", "navigate.to must be a string or Binding", "to");
+        c.push(
+          "action.navigate.invalid.to",
+          "navigate.to must be a string or Binding",
+          "to",
+        );
       }
       break;
 
     case "emit": {
       if (typeof action.type !== "string" || action.type.length === 0) {
-        c.push("action.emit.missing.type", "emit.type must be a non-empty string", "type");
+        c.push(
+          "action.emit.missing.type",
+          "emit.type must be a non-empty string",
+          "type",
+        );
       }
       if (action.class !== undefined && !isEventClass(action.class)) {
-        c.push("action.emit.invalid.class", "emit.class must be a valid EventClass when present", "class");
+        c.push(
+          "action.emit.invalid.class",
+          "emit.class must be a valid EventClass when present",
+          "class",
+        );
       }
       if (action.durability !== undefined && !isDurability(action.durability)) {
         c.push(
@@ -58,7 +67,11 @@ export function validateActionInto(
 
     case "form":
       if (typeof action.form !== "string" || action.form.length === 0) {
-        c.push("action.form.missing.form", "form.form must be a non-empty string", "form");
+        c.push(
+          "action.form.missing.form",
+          "form.form must be a non-empty string",
+          "form",
+        );
       }
       if (typeof action.op !== "string" || !FORM_OPS.has(action.op)) {
         c.push(
@@ -94,7 +107,9 @@ export function validateActionInto(
           "steps",
         );
       } else {
-        steps.forEach((step, i) => validateActionInto(step, c.child("steps").child(i)));
+        steps.forEach((step, i) =>
+          validateActionInto(step, c.child("steps").child(i)),
+        );
       }
       if (action.onError !== undefined) {
         validateActionInto(action.onError, c.child("onError"));

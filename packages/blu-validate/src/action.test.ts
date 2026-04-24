@@ -24,7 +24,9 @@ describe("validateAction", () => {
     const r = validateAction({ kind: "emit" });
     expect(r.ok).toBe(false);
     if (!r.ok) {
-      expect(r.errors.some((e) => e.code === "action.emit.missing.type")).toBe(true);
+      expect(r.errors.some((e) => e.code === "action.emit.missing.type")).toBe(
+        true,
+      );
     }
   });
 
@@ -34,7 +36,11 @@ describe("validateAction", () => {
   });
 
   it("rejects emit with an invalid durability", () => {
-    const r = validateAction({ kind: "emit", type: "x:y:z", durability: "rock" });
+    const r = validateAction({
+      kind: "emit",
+      type: "x:y:z",
+      durability: "rock",
+    });
     expect(r.ok).toBe(false);
   });
 

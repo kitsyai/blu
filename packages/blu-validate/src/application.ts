@@ -19,9 +19,16 @@ export function validateApplicationConfiguration(
     c.push("app.missing.id", "ApplicationConfiguration.id is required", "id");
   }
   if (typeof config.name !== "string" || config.name.length === 0) {
-    c.push("app.missing.name", "ApplicationConfiguration.name is required", "name");
+    c.push(
+      "app.missing.name",
+      "ApplicationConfiguration.name is required",
+      "name",
+    );
   }
-  if (typeof config.version !== "string" || !SEMVER_PATTERN.test(config.version)) {
+  if (
+    typeof config.version !== "string" ||
+    !SEMVER_PATTERN.test(config.version)
+  ) {
     c.push(
       "app.invalid.version",
       "ApplicationConfiguration.version must be a semver string",
@@ -30,14 +37,22 @@ export function validateApplicationConfiguration(
   }
 
   if (!isObject(config.entry)) {
-    c.push("app.missing.entry", "ApplicationConfiguration.entry is required", "entry");
+    c.push(
+      "app.missing.entry",
+      "ApplicationConfiguration.entry is required",
+      "entry",
+    );
   } else {
     validateViewReferenceInto(config.entry, c.child("entry"));
   }
 
   if (config.routes !== undefined) {
     if (!isObject(config.routes)) {
-      c.push("app.invalid.routes", "routes must be an object when present", "routes");
+      c.push(
+        "app.invalid.routes",
+        "routes must be an object when present",
+        "routes",
+      );
     } else {
       const routes = (config.routes as Record<string, unknown>).routes;
       if (!Array.isArray(routes)) {
@@ -50,14 +65,25 @@ export function validateApplicationConfiguration(
         routes.forEach((route, i) => {
           const rc = c.child("routes").child("routes").child(i);
           if (!isObject(route)) {
-            rc.push("app.routes.entry.shape.notObject", "RouteEntry must be an object");
+            rc.push(
+              "app.routes.entry.shape.notObject",
+              "RouteEntry must be an object",
+            );
             return;
           }
           if (typeof route.path !== "string" || route.path.length === 0) {
-            rc.push("app.routes.entry.missing.path", "RouteEntry.path is required", "path");
+            rc.push(
+              "app.routes.entry.missing.path",
+              "RouteEntry.path is required",
+              "path",
+            );
           }
           if (!isObject(route.view)) {
-            rc.push("app.routes.entry.missing.view", "RouteEntry.view is required", "view");
+            rc.push(
+              "app.routes.entry.missing.view",
+              "RouteEntry.view is required",
+              "view",
+            );
           } else {
             validateViewReferenceInto(route.view, rc.child("view"));
           }
@@ -99,14 +125,25 @@ export function validateApplicationConfiguration(
       config.projections.forEach((reg, i) => {
         const rc = c.child("projections").child(i);
         if (!isObject(reg)) {
-          rc.push("app.projections.shape.notObject", "ProjectionRegistration must be an object");
+          rc.push(
+            "app.projections.shape.notObject",
+            "ProjectionRegistration must be an object",
+          );
           return;
         }
         if (typeof reg.name !== "string" || reg.name.length === 0) {
-          rc.push("app.projections.missing.name", "ProjectionRegistration.name is required", "name");
+          rc.push(
+            "app.projections.missing.name",
+            "ProjectionRegistration.name is required",
+            "name",
+          );
         }
         if (typeof reg.kind !== "string" || reg.kind.length === 0) {
-          rc.push("app.projections.missing.kind", "ProjectionRegistration.kind is required", "kind");
+          rc.push(
+            "app.projections.missing.kind",
+            "ProjectionRegistration.kind is required",
+            "kind",
+          );
         }
         if (!isAuthority(reg.authority)) {
           rc.push(
@@ -130,11 +167,18 @@ export function validateApplicationConfiguration(
       config.eventRegistry.forEach((reg, i) => {
         const rc = c.child("eventRegistry").child(i);
         if (!isObject(reg)) {
-          rc.push("app.eventRegistry.shape.notObject", "EventRegistration must be an object");
+          rc.push(
+            "app.eventRegistry.shape.notObject",
+            "EventRegistration must be an object",
+          );
           return;
         }
         if (typeof reg.type !== "string" || reg.type.length === 0) {
-          rc.push("app.eventRegistry.missing.type", "EventRegistration.type is required", "type");
+          rc.push(
+            "app.eventRegistry.missing.type",
+            "EventRegistration.type is required",
+            "type",
+          );
         }
         if (!isEventClass(reg.defaultClass)) {
           rc.push(
@@ -150,7 +194,10 @@ export function validateApplicationConfiguration(
             "defaultDurability",
           );
         }
-        if (typeof reg.schemaVersion !== "number" || !Number.isInteger(reg.schemaVersion)) {
+        if (
+          typeof reg.schemaVersion !== "number" ||
+          !Number.isInteger(reg.schemaVersion)
+        ) {
           rc.push(
             "app.eventRegistry.invalid.schemaVersion",
             "EventRegistration.schemaVersion must be an integer",

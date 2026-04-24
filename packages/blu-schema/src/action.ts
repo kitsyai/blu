@@ -7,11 +7,7 @@ import type { Binding, PropValue } from "./value.js";
  *
  * See `docs/blu/specification.md` §12.
  */
-export type Action =
-  | NavigateAction
-  | EmitAction
-  | FormAction
-  | CompositeAction;
+export type Action = NavigateAction | EmitAction | FormAction | CompositeAction;
 
 /** Navigate to another route. */
 export interface NavigateAction {

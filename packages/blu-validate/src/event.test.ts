@@ -40,7 +40,10 @@ describe("validatePartialEvent", () => {
   it("rejects malformed event types", () => {
     const r = validatePartialEvent({ ...partial(), type: "BadType" });
     expect(r.ok).toBe(false);
-    if (!r.ok) expect(r.errors.some((e) => e.code === "envelope.invalid.type")).toBe(true);
+    if (!r.ok)
+      expect(r.errors.some((e) => e.code === "envelope.invalid.type")).toBe(
+        true,
+      );
   });
 
   it("rejects schemaVersion < 1", () => {
@@ -95,7 +98,9 @@ describe("validateEvent", () => {
     const r = validateEvent(ev);
     expect(r.ok).toBe(false);
     if (!r.ok) {
-      expect(r.errors.some((e) => e.code === "envelope.missing.payload")).toBe(true);
+      expect(r.errors.some((e) => e.code === "envelope.missing.payload")).toBe(
+        true,
+      );
     }
   });
 });

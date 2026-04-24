@@ -36,7 +36,9 @@ describe("validateViewNode", () => {
     });
     expect(r.ok).toBe(false);
     if (!r.ok) {
-      expect(r.errors.some((e) => e.code === "binding.invalid.source")).toBe(true);
+      expect(r.errors.some((e) => e.code === "binding.invalid.source")).toBe(
+        true,
+      );
     }
   });
 
@@ -47,7 +49,9 @@ describe("validateViewNode", () => {
     });
     expect(r.ok).toBe(false);
     if (!r.ok) {
-      expect(r.errors.some((e) => e.code === "action.emit.missing.type")).toBe(true);
+      expect(r.errors.some((e) => e.code === "action.emit.missing.type")).toBe(
+        true,
+      );
     }
   });
 
@@ -58,7 +62,9 @@ describe("validateViewNode", () => {
     });
     expect(r.ok).toBe(false);
     if (!r.ok) {
-      expect(r.errors.some((e) => e.code === "view.repeat.missing.as")).toBe(true);
+      expect(r.errors.some((e) => e.code === "view.repeat.missing.as")).toBe(
+        true,
+      );
     }
   });
 });

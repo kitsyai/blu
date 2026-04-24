@@ -49,7 +49,9 @@ describe("validateApplicationConfiguration", () => {
     });
     expect(r.ok).toBe(false);
     if (!r.ok) {
-      expect(r.errors.some((e) => e.code === "app.routes.entry.missing.path")).toBe(true);
+      expect(
+        r.errors.some((e) => e.code === "app.routes.entry.missing.path"),
+      ).toBe(true);
     }
   });
 

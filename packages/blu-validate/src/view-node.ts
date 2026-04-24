@@ -22,7 +22,11 @@ export function validateViewNodeInto(node: unknown, c: ErrorCollector): void {
   }
   const component = node.component;
   if (typeof component !== "string" || component.length === 0) {
-    c.push("view.missing.component", "ViewNode.component is required", "component");
+    c.push(
+      "view.missing.component",
+      "ViewNode.component is required",
+      "component",
+    );
   } else if (!URN_PATTERN.test(component)) {
     c.push(
       "view.invalid.component",
@@ -32,12 +36,20 @@ export function validateViewNodeInto(node: unknown, c: ErrorCollector): void {
   }
 
   if (node.props !== undefined && !isObject(node.props)) {
-    c.push("view.invalid.props", "ViewNode.props must be an object when present", "props");
+    c.push(
+      "view.invalid.props",
+      "ViewNode.props must be an object when present",
+      "props",
+    );
   }
 
   if (node.bindings !== undefined) {
     if (!isObject(node.bindings)) {
-      c.push("view.invalid.bindings", "ViewNode.bindings must be an object when present", "bindings");
+      c.push(
+        "view.invalid.bindings",
+        "ViewNode.bindings must be an object when present",
+        "bindings",
+      );
     } else {
       for (const [name, binding] of Object.entries(node.bindings)) {
         validateBindingInto(binding, c.child("bindings").child(name));
@@ -47,7 +59,11 @@ export function validateViewNodeInto(node: unknown, c: ErrorCollector): void {
 
   if (node.actions !== undefined) {
     if (!isObject(node.actions)) {
-      c.push("view.invalid.actions", "ViewNode.actions must be an object when present", "actions");
+      c.push(
+        "view.invalid.actions",
+        "ViewNode.actions must be an object when present",
+        "actions",
+      );
     } else {
       for (const [name, action] of Object.entries(node.actions)) {
         validateActionInto(action, c.child("actions").child(name));
@@ -60,13 +76,21 @@ export function validateViewNodeInto(node: unknown, c: ErrorCollector): void {
     const rc = c.child("repeat");
     validateBindingInto(r.over, rc.child("over"));
     if (typeof r.as !== "string" || r.as.length === 0) {
-      rc.push("view.repeat.missing.as", "repeat.as must be a non-empty string", "as");
+      rc.push(
+        "view.repeat.missing.as",
+        "repeat.as must be a non-empty string",
+        "as",
+      );
     }
   }
 
   if (node.children !== undefined) {
     if (!Array.isArray(node.children)) {
-      c.push("view.invalid.children", "ViewNode.children must be an array when present", "children");
+      c.push(
+        "view.invalid.children",
+        "ViewNode.children must be an array when present",
+        "children",
+      );
     } else {
       node.children.forEach((child, i) =>
         validateViewNodeInto(child, c.child("children").child(i)),
@@ -89,7 +113,11 @@ export function validateBindingInto(value: unknown, c: ErrorCollector): void {
     );
   }
   if (typeof value.path !== "string" || value.path.length === 0) {
-    c.push("binding.missing.path", "Binding.path must be a non-empty string", "path");
+    c.push(
+      "binding.missing.path",
+      "Binding.path must be a non-empty string",
+      "path",
+    );
   }
 }
 

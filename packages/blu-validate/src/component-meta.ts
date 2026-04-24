@@ -40,7 +40,10 @@ export function validateComponentMeta(meta: unknown): Result<ComponentMeta> {
       "description",
     );
   }
-  if (typeof meta.category !== "string" || !VALID_CATEGORIES.has(meta.category)) {
+  if (
+    typeof meta.category !== "string" ||
+    !VALID_CATEGORIES.has(meta.category)
+  ) {
     c.push(
       "component-meta.invalid.category",
       "ComponentMeta.category must be one of: primitive, layout, ui, form, block, template, icon",
@@ -54,7 +57,10 @@ export function validateComponentMeta(meta: unknown): Result<ComponentMeta> {
       "version",
     );
   }
-  if (!isObject(meta.props) || (meta.props as Record<string, unknown>).type !== "object") {
+  if (
+    !isObject(meta.props) ||
+    (meta.props as Record<string, unknown>).type !== "object"
+  ) {
     c.push(
       "component-meta.invalid.props",
       "ComponentMeta.props must be a PropSchema with type: 'object'",

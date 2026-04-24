@@ -1,9 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  createEventId,
-  eventIdTimestamp,
-  isEventId,
-} from "./event-id.js";
+import { createEventId, eventIdTimestamp, isEventId } from "./event-id.js";
 
 describe("createEventId", () => {
   it("returns a 26-character ULID", () => {

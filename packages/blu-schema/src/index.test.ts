@@ -23,7 +23,9 @@ describe("schema public surface", () => {
       id: "demo",
       name: "Demo",
       version: "1.0.0",
-      entry: { inline: { component: "urn:blu:ui:text", props: { value: "hi" } } },
+      entry: {
+        inline: { component: "urn:blu:ui:text", props: { value: "hi" } },
+      },
     };
     expect(app.id).toBe("demo");
   });
@@ -100,7 +102,11 @@ describe("schema public surface", () => {
     const form: FormDefinition = {
       id: "signup",
       fields: {
-        email: { type: "text", required: true, validation: { pattern: ".+@.+" } },
+        email: {
+          type: "text",
+          required: true,
+          validation: { pattern: ".+@.+" },
+        },
         age: { type: "number", validation: { min: 13 } },
       },
       validation: [
