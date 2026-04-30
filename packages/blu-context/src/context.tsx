@@ -25,6 +25,29 @@ export interface DataSourceState<T> {
   fetchedAt?: number;
 }
 
+/** Projection-backed shape for one runtime form. */
+export interface FormState {
+  values: Readonly<Record<string, unknown>>;
+  errors: Readonly<Record<string, readonly string[]>>;
+  formErrors: readonly string[];
+  valid: boolean;
+  touched: Readonly<Record<string, boolean>>;
+  submitting: boolean;
+  submitCount: number;
+  submittedAt?: number;
+}
+
+/** Thin React handle over a `form:{id}` projection plus common mutations. */
+export interface FormHandle extends FormState {
+  setField: (
+    field: string,
+    value: unknown,
+  ) => Promise<BluEvent<{ field: string; value: unknown }>>;
+  reset: () => Promise<BluEvent<Record<string, never>>>;
+  validate: () => Promise<BluEvent<Record<string, never>>>;
+  submit: () => Promise<BluEvent<Record<string, never>>>;
+}
+
 /** Props accepted by the root Blu runtime provider. */
 export interface BluProviderProps {
   bus: Bus;
@@ -105,6 +128,65 @@ export function useDataSource<T>(id: string): DataSourceState<T> {
 }
 
 /**
+ * Read and mutate one form projection.
+ *
+ * The hook stays thin: reads come from the slate projection and writes go
+ * through the bus as standard Blu events for the form runtime to interpret.
+ */
+export function useForm(id: string): FormHandle {
+  const projectionName = normalizeFormProjectionName(id);
+  const state = useProjection<FormState>(projectionName);
+  const emit = useEmit();
+
+  return useMemo(
+    () => ({
+      ...state,
+      setField(field: string, value: unknown) {
+        return emit({
+          type: `${projectionName}:field-set`,
+          schemaVersion: 1,
+          class: "fact",
+          durability: "journaled",
+          payload: { field, value },
+          emitter: "urn:blu:context:useForm",
+        });
+      },
+      reset() {
+        return emit({
+          type: `${projectionName}:reset`,
+          schemaVersion: 1,
+          class: "fact",
+          durability: "journaled",
+          payload: {},
+          emitter: "urn:blu:context:useForm",
+        });
+      },
+      validate() {
+        return emit({
+          type: `${projectionName}:validate-requested`,
+          schemaVersion: 1,
+          class: "fact",
+          durability: "journaled",
+          payload: {},
+          emitter: "urn:blu:context:useForm",
+        });
+      },
+      submit() {
+        return emit({
+          type: `${projectionName}:submit-requested`,
+          schemaVersion: 1,
+          class: "fact",
+          durability: "journaled",
+          payload: {},
+          emitter: "urn:blu:context:useForm",
+        });
+      },
+    }),
+    [emit, projectionName, state],
+  );
+}
+
+/**
  * Subscribe to raw bus events for advanced integration code.
  *
  * The subscription is cleaned up automatically on unmount. The latest handler
@@ -126,4 +208,8 @@ export function useEventSubscription(
       handlerRef.current(event);
     });
   }, [bus, filter]);
+}
+
+function normalizeFormProjectionName(id: string): string {
+  return id.startsWith("form:") ? id : `form:${id}`;
 }

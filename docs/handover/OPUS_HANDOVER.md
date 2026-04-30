@@ -30,7 +30,7 @@ Phase one is being built bottom-up per `docs/blu/execution.md`:
 3. Stage 3 - view and authoring surface
 4. Stage 4 - shell, tooling, release hardening
 
-Sprint 1 through Sprint 7 are now complete:
+Sprint 1 through Sprint 8 are now complete:
 
 - Sprint 1: `@kitsy/blu-core`, `@kitsy/blu-schema`, `@kitsy/blu-validate`
 - Sprint 2: `@kitsy/blu-bus`
@@ -39,8 +39,9 @@ Sprint 1 through Sprint 7 are now complete:
 - Sprint 5: `@kitsy/blu-context`
 - Sprint 6: `@kitsy/blu-devtools`
 - Sprint 7: `@kitsy/blu-view`
+- Sprint 8: schema actions, data sources, forms
 
-Sprint 8 (schema actions, data sources, forms) is next.
+Sprint 9 (`blu-shell` plus the first view-library packages) is next.
 
 ### Important principles
 
@@ -77,14 +78,12 @@ Sprint 8 (schema actions, data sources, forms) is next.
 
 **Critical sections for the next agent:**
 
-- `docs/blu/execution.md` section 2.3 - Sprint 8 (schema actions, data sources, forms) spec and exit criteria
+- `docs/blu/execution.md` section 2.4 - Sprint 9 (`blu-shell` and the view library) spec and exit criteria
 - `docs/blu/execution.md` section 3 - dependency rules
-- `docs/blu/specification.md` sections 12, 13, 14, and 16 - actions, forms, data sources, React hooks
-- `packages/blu-context/src/context.tsx`
+- `docs/blu/shell.md` - shell taxonomy and composition rules
+- `docs/blu/specification.md` sections 11 through 16 - current view/runtime contracts the shell must preserve
 - `packages/blu-view/src/view.tsx`
-- `packages/blu-schema/src/action.ts`
-- `packages/blu-schema/src/data-source.ts`
-- `packages/blu-schema/src/form.ts`
+- `packages/blu-context/src/context.tsx`
 
 ---
 
@@ -207,14 +206,12 @@ Sprint 8 (schema actions, data sources, forms) is next.
 
 ### What is incomplete
 
-- Stage 3 is not yet complete; Sprint 8 (schema actions, data sources, forms) is next
+- Stage 3 implementation sprints are complete, but the Stage 3 gate example application is still not built
 - No per-package `CHANGELOG.md` files yet
 - No ESLint config yet; `pnpm lint` is currently a Prettier check
 - `blu-slate` is still in-memory only; IndexedDB persistence remains open for the Stage 1 gate path
 - `blu-wire` currently emits transport-local lifecycle events; higher-layer projection of those onto the bus is still a later wiring concern
-- `useDataSource()` in `blu-context` is intentionally a typed projection read over the current slate contract; the dedicated data-source runtime is still scheduled for Sprint 8
 - There is still no dedicated Stage 2 gate integration test that mounts provider, transport, and devtools together in one scenario
-- `blu-view` intentionally stops short of action wiring; `ViewNode.actions`, form submission, and data-source lifecycle remain Sprint 8 work
 
 ### Known errors / warnings
 
@@ -565,107 +562,87 @@ Deliver `@kitsy/blu-devtools`, the Stage 2 devtools MVP: a standalone dev panel 
 
 ---
 
-## Sprint 7 - Current Completed Work
+## Sprint 8 - Current Completed Work
 
 **Status: Done**
 
 ### Goal
 
-Deliver `@kitsy/blu-view`: the `<View>` component that interprets a `ViewNode`, resolves bindings, subscribes to projections, and renders through a `ComponentRegistry`.
+Deliver schema actions, data sources, and forms: action resolution (`navigate`, `emit`, `form`, `composite`), data source registration and projection materialization, and the form projection with field bindings and validation.
 
 ### Completed
 
-- Scaffolded `packages/blu-view/` with standard workspace package metadata and TS/Vitest config
-- Implemented `ComponentRegistry` and `createComponentRegistry()` with registration, lookup, category filtering, and metadata search helpers
-- Implemented the recursive `<View>` renderer over `ViewNode`
-- Implemented runtime resolution for:
-  - static props
-  - shorthand `$bind` reads
-  - explicit `bindings`
-  - `when` conditions
-  - `repeat` directives with stable key support
-- Chose to keep binding resolution inside the current `blu-context` surface by subscribing each node only to the projection/data/form sources it actually consumes
-- Implemented unknown-URN handling that renders a labeled fallback in development and nothing in production
-- Kept `ViewNode.actions` intentionally out of scope for Sprint 7 so action compilation, form operations, and data-source lifecycle stay in Sprint 8 where the execution plan places them
-- Added a focused 5-test Sprint 7 suite covering:
-  - static render parity against equivalent JSX
-  - projection binding resolution and re-render behavior
-  - condition evaluation
-  - repeat keying and identity preservation across reorder
-  - unknown-URN handling in development and production
+- Extended `packages/blu-view/src/view.tsx` with a runtime layer that:
+  - compiles `ViewNode.actions` onto component props
+  - resolves `navigate`, `emit`, `form`, and `composite` actions
+  - registers form projections and validates submit flow
+  - registers `StaticDataSource`, `ProjectionDataSource`, and `RestDataSource`
+  - materializes REST lifecycle state as `{ status, data, error, fetchedAt }`
+- Added a thin projection-backed `useForm()` hook to `@kitsy/blu-context`
+- Preserved the existing Sprint 7 binding, condition, repeat, and unknown-URN behavior while adding the Sprint 8 runtime
+- Expanded test coverage in `blu-view` to cover:
+  - emit action compilation
+  - composite plus navigate action execution
+  - REST data-source lifecycle
+  - form field mutation, validation, and submit flow
+- Added a `blu-context` test covering the new `useForm()` handle
 
 ### Files touched
 
-- `packages/blu-view/package.json`
-- `packages/blu-view/tsconfig.json`
-- `packages/blu-view/tsconfig.build.json`
-- `packages/blu-view/vitest.config.ts`
+- `packages/blu-context/src/context.tsx`
+- `packages/blu-context/src/index.ts`
+- `packages/blu-context/src/context.test.tsx`
 - `packages/blu-view/src/view.tsx`
-- `packages/blu-view/src/index.ts`
 - `packages/blu-view/src/view.test.tsx`
-- `pnpm-lock.yaml`
 
 ### Verification
 
 - `pnpm install` -> clean
 - `pnpm -r build` -> clean across 9 packages
 - `pnpm -r typecheck` -> clean across 9 packages
-- `pnpm -r test` -> 158 / 158 passing
+- `pnpm -r test` -> 163 / 163 passing
 - `pnpm lint` -> clean
 
 ### Remaining
 
-- `ViewNode.actions`, form submission wiring, and active data-source lifecycle are still intentionally unimplemented and move to Sprint 8
+- Stage 3 gate application still needs to be authored entirely as data before the stage can be called complete
+- Routing remains a placeholder event emission until `blu-route` lands in Sprint 10
 
 ---
 
-## Sprint 8 - Next Work
+## Sprint 9 - Next Work
 
 **Status: Ready to Start**
 
 ### Goal
 
-Deliver schema actions, data sources, and forms: action resolution (`navigate`, `emit`, `form`, `composite`), data source registration and projection materialization, and the form projection with field bindings and validation.
+Deliver `blu-shell` plus the first view-library packages: enough shell taxonomy, primitive UI components, and theme wiring to render representative applications under the Stage 4 plan.
 
-Per `docs/blu/execution.md` section 2.3, "Sprint 8 - schema actions, data sources, forms".
+Per `docs/blu/execution.md` section 2.4, "Sprint 9 - blu-shell and the view library".
 
 ### Reference docs
 
-- `docs/blu/execution.md` section 2.3 (Sprint 8), section 3 (dependency rules), section 4 (quality rules)
-- `docs/blu/specification.md` sections 12, 13, 14, and 16
+- `docs/blu/execution.md` section 2.4 (Sprint 9), section 3 (dependency rules), section 4 (quality rules)
+- `docs/blu/shell.md`
+- `docs/blu/specification.md` sections 10, 11, 15, and 16
 - `packages/blu-view/src/view.tsx`
-- `packages/blu-schema/src/action.ts`
-- `packages/blu-schema/src/data-source.ts`
-- `packages/blu-schema/src/form.ts`
+- Future Sprint 9 package surfaces under the shell/view-library layer
 
 ### Tasks
 
-1. Deliver action resolution for:
-   - `navigate`
-   - `emit`
-   - `form`
-   - `composite`
-2. Implement data source registration and projection materialization, including:
-   - `RestDataSource`
-   - `StaticDataSource`
-   - `ProjectionDataSource`
-3. Implement the form projection with field bindings, validation, and submit flow.
-4. Connect the new action/data/form runtime into the current `blu-view` renderer without breaking its existing binding behavior.
-5. Add tests for:
-   - action compilation
-   - data source lifecycle
-   - form field mutation
-   - validation
-   - submit flow
+1. Implement the shell taxonomy from `docs/blu/shell.md`
+2. Add the first view-library primitives needed by the Sprint 9 acceptance criteria
+3. Preserve the current Sprint 7 and Sprint 8 view/runtime contracts while introducing shell composition
+4. Add tests for shell conformance, composition rules, and theme round-trip
 
 ### Acceptance Criteria
 
-Per `docs/blu/execution.md` Sprint 8 exit criteria:
+Per `docs/blu/execution.md` Sprint 9 exit criteria:
 
-- A schema-authored button with an `emit` action produces the correct event on click
-- A `RestDataSource` produces a projection with `{ status, data, error }` that transitions correctly on fetch
-- A form with required fields blocks submission until valid; submission emits the expected fact event with the form payload
-- Tests cover action compilation, data source lifecycle, form field mutation, validation, and submit flow
+- `AppBar` renders an app with title, content, and a presenter-hosted modal
+- Theme change events repaint without remounting
+- A representative application composed from the first view-library packages renders under the supported shells
+- Tests cover shell conformance, composition rules, and theme round-trip
 
 ---
 

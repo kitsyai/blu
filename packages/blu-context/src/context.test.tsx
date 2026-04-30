@@ -14,10 +14,12 @@ import { createSlate, type JournalFilter, type Slate } from "@kitsy/blu-slate";
 import {
   BluProvider,
   type DataSourceState,
+  type FormState,
   useBus,
   useDataSource,
   useEmit,
   useEventSubscription,
+  useForm,
   useProjection,
   useSlate,
 } from "./context.js";
@@ -362,6 +364,86 @@ describe("@kitsy/blu-context", () => {
     expect(readByTestId(rendered.container, "outer-bus")).toBe("outer");
     expect(readByTestId(rendered.container, "inner-count")).toBe("9");
     expect(readByTestId(rendered.container, "inner-slate")).toBe("inner");
+  });
+
+  it("exposes a projection-backed form handle that emits standard form events", async () => {
+    const runtime = createRuntimeHarness();
+
+    registerProjection<FormState>(runtime.slate, {
+      name: "form:signup",
+      initialState: {
+        values: {
+          email: "",
+        },
+        errors: {},
+        formErrors: [],
+        valid: true,
+        touched: {},
+        submitting: false,
+        submitCount: 0,
+      },
+      reduce: (state, event) => {
+        if (event.type === "form:signup:field-set") {
+          const payload = event.payload as { field: string; value: unknown };
+          return {
+            ...state,
+            values: {
+              ...state.values,
+              [payload.field]: payload.value,
+            },
+          };
+        }
+        if (event.type === "form:signup:reset") {
+          return {
+            ...state,
+            values: {
+              email: "",
+            },
+          };
+        }
+        return state;
+      },
+    });
+
+    function App(): React.JSX.Element {
+      const form = useForm("signup");
+
+      return (
+        <div>
+          <span data-testid="email">{String(form.values.email ?? "")}</span>
+          <button
+            type="button"
+            onClick={() => {
+              void form.setField("email", "ada@example.com");
+            }}
+          >
+            fill
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              void form.reset();
+            }}
+          >
+            reset
+          </button>
+        </div>
+      );
+    }
+
+    const rendered = await renderApp(
+      <BluProvider bus={runtime.bus} slate={runtime.slate}>
+        <App />
+      </BluProvider>,
+    );
+
+    expect(readByTestId(rendered.container, "email")).toBe("");
+
+    await click(rendered.container, "fill");
+    expect(readByTestId(rendered.container, "email")).toBe("ada@example.com");
+
+    await click(rendered.container, "reset");
+    expect(readByTestId(rendered.container, "email")).toBe("");
   });
 });
 
