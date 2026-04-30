@@ -30,7 +30,7 @@ Phase one is being built bottom-up per `docs/blu/execution.md`:
 3. Stage 3 - view and authoring surface
 4. Stage 4 - shell, tooling, release hardening
 
-Sprint 1 through Sprint 6 are now complete:
+Sprint 1 through Sprint 7 are now complete:
 
 - Sprint 1: `@kitsy/blu-core`, `@kitsy/blu-schema`, `@kitsy/blu-validate`
 - Sprint 2: `@kitsy/blu-bus`
@@ -38,8 +38,9 @@ Sprint 1 through Sprint 6 are now complete:
 - Sprint 4: `@kitsy/blu-wire`
 - Sprint 5: `@kitsy/blu-context`
 - Sprint 6: `@kitsy/blu-devtools`
+- Sprint 7: `@kitsy/blu-view`
 
-Sprint 7 (`@kitsy/blu-view`) is next.
+Sprint 8 (schema actions, data sources, forms) is next.
 
 ### Important principles
 
@@ -76,13 +77,14 @@ Sprint 7 (`@kitsy/blu-view`) is next.
 
 **Critical sections for the next agent:**
 
-- `docs/blu/execution.md` section 2.3 - Sprint 7 (`blu-view`) spec and exit criteria
+- `docs/blu/execution.md` section 2.3 - Sprint 8 (schema actions, data sources, forms) spec and exit criteria
 - `docs/blu/execution.md` section 3 - dependency rules
-- `docs/blu/specification.md` sections 10, 11, 15, and 16 - schema types, ViewNode, component registry, React hooks
+- `docs/blu/specification.md` sections 12, 13, 14, and 16 - actions, forms, data sources, React hooks
 - `packages/blu-context/src/context.tsx`
-- `packages/blu-devtools/src/devtools.tsx`
-- `packages/blu-schema/src/view-node.ts`
-- `packages/blu-schema/src/component-meta.ts`
+- `packages/blu-view/src/view.tsx`
+- `packages/blu-schema/src/action.ts`
+- `packages/blu-schema/src/data-source.ts`
+- `packages/blu-schema/src/form.ts`
 
 ---
 
@@ -158,6 +160,13 @@ Sprint 7 (`@kitsy/blu-view`) is next.
 - `src/index.ts`
 - `src/devtools.test.tsx`
 
+**`packages/blu-view/` (Sprint 7):**
+
+- `package.json`, `tsconfig.json`, `tsconfig.build.json`, `vitest.config.ts`
+- `src/view.tsx` - `ComponentRegistry`, `createComponentRegistry()`, recursive `<View>` renderer, binding/condition/repeat resolution, unknown-URN fallback behavior
+- `src/index.ts`
+- `src/view.test.tsx`
+
 ### Files modified
 
 - `packages/blu-core/src/event.ts`
@@ -175,6 +184,7 @@ Sprint 7 (`@kitsy/blu-view`) is next.
 - `@kitsy/blu-wire`
 - `@kitsy/blu-context`
 - `@kitsy/blu-devtools`
+- `@kitsy/blu-view`
 
 ### What is wired
 
@@ -185,8 +195,10 @@ Sprint 7 (`@kitsy/blu-view`) is next.
 - `@kitsy/blu-wire` imports only `@kitsy/blu-core`
 - `@kitsy/blu-context` imports only `@kitsy/blu-core`, `@kitsy/blu-bus`, `@kitsy/blu-slate`, and React
 - `@kitsy/blu-devtools` imports only `@kitsy/blu-core`, `@kitsy/blu-bus`, `@kitsy/blu-slate`, and React
+- `@kitsy/blu-view` imports only `@kitsy/blu-core`, `@kitsy/blu-schema`, `@kitsy/blu-context`, and React
 - `@kitsy/blu-devtools` reads the journal from the slate and accepts host-supplied projection descriptors plus transport snapshots instead of reaching into lower-layer registries that do not exist yet
-- All eight workspace packages emit `dist/` with `.js`, `.d.ts`, and `.d.ts.map`
+- `@kitsy/blu-view` resolves `ViewNode` props, bindings, conditions, and repeat directives against the current slate through `blu-context`, and uses a runtime `ComponentRegistry` for URN-addressed rendering
+- All nine workspace packages emit `dist/` with `.js`, `.d.ts`, and `.d.ts.map`
 
 ### What is mock / no-op
 
@@ -195,13 +207,14 @@ Sprint 7 (`@kitsy/blu-view`) is next.
 
 ### What is incomplete
 
-- The Stage 2 package set is now complete; Sprint 7 (`blu-view`) is next
+- Stage 3 is not yet complete; Sprint 8 (schema actions, data sources, forms) is next
 - No per-package `CHANGELOG.md` files yet
 - No ESLint config yet; `pnpm lint` is currently a Prettier check
 - `blu-slate` is still in-memory only; IndexedDB persistence remains open for the Stage 1 gate path
 - `blu-wire` currently emits transport-local lifecycle events; higher-layer projection of those onto the bus is still a later wiring concern
 - `useDataSource()` in `blu-context` is intentionally a typed projection read over the current slate contract; the dedicated data-source runtime is still scheduled for Sprint 8
 - There is still no dedicated Stage 2 gate integration test that mounts provider, transport, and devtools together in one scenario
+- `blu-view` intentionally stops short of action wiring; `ViewNode.actions`, form submission, and data-source lifecycle remain Sprint 8 work
 
 ### Known errors / warnings
 
@@ -212,18 +225,18 @@ Sprint 7 (`@kitsy/blu-view`) is next.
 ```text
 pnpm install
   -> workspace dependencies installed successfully
-  note: `pnpm-lock.yaml` now includes the new `blu-devtools` workspace package
+  note: `pnpm-lock.yaml` now includes the new `blu-view` workspace package
         while reusing the existing React/jsdom test dependency set
 
 pnpm -r build
-  -> 8 packages built clean
-     blu-core, blu-schema, blu-validate, blu-bus, blu-slate, blu-wire, blu-context, blu-devtools
+  -> 9 packages built clean
+     blu-core, blu-schema, blu-validate, blu-bus, blu-slate, blu-wire, blu-context, blu-devtools, blu-view
 
 pnpm -r typecheck
-  -> 8 packages clean
+  -> 9 packages clean
 
 pnpm -r test
-  -> 153 / 153 passing
+  -> 158 / 158 passing
      blu-core     51 / 51   (7 files)
      blu-schema   11 / 11   (1 file)
      blu-validate 58 / 58   (8 files)
@@ -232,6 +245,7 @@ pnpm -r test
      blu-wire      7 /  7   (1 file)
      blu-context   5 /  5   (1 file)
      blu-devtools  3 /  3   (1 file)
+     blu-view      5 /  5   (1 file)
 
 pnpm lint
   -> clean
@@ -551,49 +565,107 @@ Deliver `@kitsy/blu-devtools`, the Stage 2 devtools MVP: a standalone dev panel 
 
 ---
 
-## Sprint 7 - Next Work
+## Sprint 7 - Current Completed Work
 
-**Status: Ready to Start**
+**Status: Done**
 
 ### Goal
 
 Deliver `@kitsy/blu-view`: the `<View>` component that interprets a `ViewNode`, resolves bindings, subscribes to projections, and renders through a `ComponentRegistry`.
 
-Per `docs/blu/execution.md` section 2.3, "Sprint 7 - blu-view (ViewNode renderer and ComponentRegistry)".
+### Completed
+
+- Scaffolded `packages/blu-view/` with standard workspace package metadata and TS/Vitest config
+- Implemented `ComponentRegistry` and `createComponentRegistry()` with registration, lookup, category filtering, and metadata search helpers
+- Implemented the recursive `<View>` renderer over `ViewNode`
+- Implemented runtime resolution for:
+  - static props
+  - shorthand `$bind` reads
+  - explicit `bindings`
+  - `when` conditions
+  - `repeat` directives with stable key support
+- Chose to keep binding resolution inside the current `blu-context` surface by subscribing each node only to the projection/data/form sources it actually consumes
+- Implemented unknown-URN handling that renders a labeled fallback in development and nothing in production
+- Kept `ViewNode.actions` intentionally out of scope for Sprint 7 so action compilation, form operations, and data-source lifecycle stay in Sprint 8 where the execution plan places them
+- Added a focused 5-test Sprint 7 suite covering:
+  - static render parity against equivalent JSX
+  - projection binding resolution and re-render behavior
+  - condition evaluation
+  - repeat keying and identity preservation across reorder
+  - unknown-URN handling in development and production
+
+### Files touched
+
+- `packages/blu-view/package.json`
+- `packages/blu-view/tsconfig.json`
+- `packages/blu-view/tsconfig.build.json`
+- `packages/blu-view/vitest.config.ts`
+- `packages/blu-view/src/view.tsx`
+- `packages/blu-view/src/index.ts`
+- `packages/blu-view/src/view.test.tsx`
+- `pnpm-lock.yaml`
+
+### Verification
+
+- `pnpm install` -> clean
+- `pnpm -r build` -> clean across 9 packages
+- `pnpm -r typecheck` -> clean across 9 packages
+- `pnpm -r test` -> 158 / 158 passing
+- `pnpm lint` -> clean
+
+### Remaining
+
+- `ViewNode.actions`, form submission wiring, and active data-source lifecycle are still intentionally unimplemented and move to Sprint 8
+
+---
+
+## Sprint 8 - Next Work
+
+**Status: Ready to Start**
+
+### Goal
+
+Deliver schema actions, data sources, and forms: action resolution (`navigate`, `emit`, `form`, `composite`), data source registration and projection materialization, and the form projection with field bindings and validation.
+
+Per `docs/blu/execution.md` section 2.3, "Sprint 8 - schema actions, data sources, forms".
 
 ### Reference docs
 
-- `docs/blu/execution.md` section 2.3 (Sprint 7), section 3 (dependency rules), section 4 (quality rules)
-- `docs/blu/specification.md` sections 10, 11, 15, and 16
-- `docs/blu/architecture.md` section 5.1 (`blu-view`)
-- `packages/blu-context/src/context.tsx`
-- `packages/blu-schema/src/view-node.ts`
-- `packages/blu-schema/src/component-meta.ts`
+- `docs/blu/execution.md` section 2.3 (Sprint 8), section 3 (dependency rules), section 4 (quality rules)
+- `docs/blu/specification.md` sections 12, 13, 14, and 16
+- `packages/blu-view/src/view.tsx`
+- `packages/blu-schema/src/action.ts`
+- `packages/blu-schema/src/data-source.ts`
+- `packages/blu-schema/src/form.ts`
 
 ### Tasks
 
-1. Scaffold `packages/blu-view/` with package metadata, TS configs, and Vitest config.
-2. Implement:
-   - the core `<View>` renderer for `ViewNode`
-   - binding resolution through `blu-context`
-   - a `ComponentRegistry` for URN-addressed React components
-3. Support static props first, then binding-driven reads, conditions, and repeat directives.
-4. Add tests for:
-   - render parity against equivalent JSX for static props
-   - projection binding resolution and re-render behavior
-   - condition evaluation
-   - repeat keying
-   - unknown-URN handling
+1. Deliver action resolution for:
+   - `navigate`
+   - `emit`
+   - `form`
+   - `composite`
+2. Implement data source registration and projection materialization, including:
+   - `RestDataSource`
+   - `StaticDataSource`
+   - `ProjectionDataSource`
+3. Implement the form projection with field bindings, validation, and submit flow.
+4. Connect the new action/data/form runtime into the current `blu-view` renderer without breaking its existing binding behavior.
+5. Add tests for:
+   - action compilation
+   - data source lifecycle
+   - form field mutation
+   - validation
+   - submit flow
 
 ### Acceptance Criteria
 
-Per `docs/blu/execution.md` Sprint 7 exit criteria:
+Per `docs/blu/execution.md` Sprint 8 exit criteria:
 
-- A `ViewNode` tree with static props renders identically to the equivalent JSX tree
-- A `ViewNode` with bindings reads from projections and re-renders on event-driven state changes
-- Conditions and repeat directives render correctly
-- Unknown URNs render a labelled fallback in dev and a silent nothing in production
-- Tests cover render parity, binding resolution, condition evaluation, repeat keying, and unknown-URN handling
+- A schema-authored button with an `emit` action produces the correct event on click
+- A `RestDataSource` produces a projection with `{ status, data, error }` that transitions correctly on fetch
+- A form with required fields blocks submission until valid; submission emits the expected fact event with the form payload
+- Tests cover action compilation, data source lifecycle, form field mutation, validation, and submit flow
 
 ---
 
@@ -602,7 +674,6 @@ Per `docs/blu/execution.md` Sprint 7 exit criteria:
 Listed for orientation only. Do not implement ahead.
 
 - Stage 2 gate - React app under provider can emit events, read projections, cross-tab sync, and inspect itself in devtools
-- Sprint 8 - schema actions, data sources, forms
 - Sprint 9 - `blu-shell` plus view library packages
 - Sprint 10 - `blu-route`, `blu-cli`, release hardening
 
@@ -614,15 +685,18 @@ Listed for orientation only. Do not implement ahead.
 2. Then read, in order:
    - `docs/blu/foundation.md`
    - `docs/blu/architecture.md`
-   - `docs/blu/specification.md` (focus on schema types, ViewNode, component registry, and React hooks)
-   - `docs/blu/execution.md` section 2.3 (Sprint 7) and section 3 (dependency rules)
-3. Inspect the Stage 2/3 deliverables before writing Sprint 7 code:
+   - `docs/blu/specification.md` (focus on actions, forms, data sources, ViewNode bindings, and React hooks)
+   - `docs/blu/execution.md` section 2.3 (Sprint 8) and section 3 (dependency rules)
+3. Inspect the current Stage 2/3 runtime before writing Sprint 8 code:
+   - `packages/blu-view/src/view.tsx`
    - `packages/blu-context/src/context.tsx`
-   - `packages/blu-devtools/src/devtools.tsx`
-   - `packages/blu-schema/src/view-node.ts`
-   - `packages/blu-schema/src/component-meta.ts`
-4. Implement Sprint 7 only. Do not start Sprint 8.
-5. Files to edit: new files under `packages/blu-view/` only, unless Sprint 7 exposes a real bug in an earlier package.
+   - `packages/blu-schema/src/action.ts`
+   - `packages/blu-schema/src/data-source.ts`
+   - `packages/blu-schema/src/form.ts`
+4. Implement Sprint 8 only. Do not start Sprint 9.
+5. Preferred edit surface:
+   - `packages/blu-view/` for action/data/form runtime integration
+   - `packages/blu-context/` only if the Sprint 8 hook contract (`useForm`) or the existing data-source hook surface must be completed to match the spec
 6. Files not to touch unless a real bug forces it:
    - `packages/blu-core/`
    - `packages/blu-schema/`
@@ -630,7 +704,6 @@ Listed for orientation only. Do not implement ahead.
    - `packages/blu-bus/`
    - `packages/blu-slate/`
    - `packages/blu-wire/`
-   - `packages/blu-context/`
    - `packages/blu-devtools/`
    - root tooling files
    - anything under `docs/` other than this handover update
@@ -644,7 +717,7 @@ pnpm -r test
 pnpm lint
 ```
 
-Existing 153 tests must remain green. Sprint 7 must add coverage for `blu-view`.
+Existing 158 tests must remain green. Sprint 8 must add coverage for schema actions, data sources, and forms.
 
 ---
 
@@ -670,7 +743,9 @@ Existing 153 tests must remain green. Sprint 7 must add coverage for `blu-view`.
 | Should devtools introspect projections and transports through new lower-layer registries or continue taking host-supplied descriptors/snapshots? | Resolved for Sprint 6: stay host-supplied for now; only add registries later if Stage 3 or Stage 4 ergonomics prove they are necessary. | Future runtime ergonomics review |
 | Where should `sync:transport:error` and `sync:session:resumed` become visible to app code? | Keep them transport-local in `blu-wire` for now and bridge them onto the bus at a later integration layer if app-facing visibility becomes necessary. | Stage 3 or Stage 4 integration decision |
 | Is IndexedDB persistence required before the Stage 2 gate, or can the gate initially proceed with in-memory slate plus transport? | The slate is still in-memory only; defer persistence unless the Stage 1 or Stage 2 gate explicitly forces it first. | Stage gate planning |
-| ESLint config - adopt now or after Sprint 7? | Still after Sprint 7 unless the first view-layer renderer work exposes a concrete linting need first. | Stage 3 gate |
+| Where should schema action execution live? | Keep execution in the `blu-view` runtime layer; `blu-context` may expose thin hooks, but it should not become the action interpreter. | Sprint 8 implementation |
+| Should Sprint 8 add `useForm()` to `blu-context` now? | Probably yes if the form projection wiring needs to surface a read/write handle that matches spec section 16; keep it thin and projection-backed. | Sprint 8 implementation |
+| ESLint config - adopt now or after Sprint 8? | Still after Sprint 8 unless the action/form runtime exposes a concrete linting need first. | Stage 3 gate |
 | Per-package `CHANGELOG.md`? | Add at first publish, not now. | First alpha publish |
 
 ---
@@ -681,43 +756,44 @@ Copy-paste prompt for the next coding agent:
 
 ---
 
-> You are continuing work on the Blu framework (event-first, schema-driven UI). Sprint 1 through Sprint 6 are complete; this handover reflects the current repo state after `@kitsy/blu-devtools`.
+> You are continuing work on the Blu framework (event-first, schema-driven UI). Sprint 1 through Sprint 7 are complete; this handover reflects the current repo state after `@kitsy/blu-view`.
 >
 > **Step 1 - Read these in order, no skipping:**
 > 1. `docs/handover/OPUS_HANDOVER.md` (full file)
 > 2. `docs/blu/foundation.md`
 > 3. `docs/blu/architecture.md`
-> 4. `docs/blu/specification.md` (focus on schema types, ViewNode, component registry, and React hooks)
-> 5. `docs/blu/execution.md` section 2.3 (Sprint 7 spec) and section 3 (dependency rules)
-> 6. `packages/blu-context/src/context.tsx`
-> 7. `packages/blu-devtools/src/devtools.tsx`
-> 8. `packages/blu-schema/src/view-node.ts`
-> 9. `packages/blu-schema/src/component-meta.ts`
+> 4. `docs/blu/specification.md` (focus on actions, forms, data sources, ViewNode bindings, and React hooks)
+> 5. `docs/blu/execution.md` section 2.3 (Sprint 8 spec) and section 3 (dependency rules)
+> 6. `packages/blu-view/src/view.tsx`
+> 7. `packages/blu-context/src/context.tsx`
+> 8. `packages/blu-schema/src/action.ts`
+> 9. `packages/blu-schema/src/data-source.ts`
+> 10. `packages/blu-schema/src/form.ts`
 >
-> **Step 2 - Scope:** Implement **Sprint 7 only** - `@kitsy/blu-view`. The full task list and acceptance criteria are in `docs/handover/OPUS_HANDOVER.md` section 4 "Sprint 7 - Next Work".
+> **Step 2 - Scope:** Implement **Sprint 8 only** - schema actions, data sources, and forms. The full task list and acceptance criteria are in `docs/handover/OPUS_HANDOVER.md` section 4 "Sprint 8 - Next Work".
 >
 > **Step 3 - Guardrails (do not violate):**
 > - Do not redesign the architecture. Do not refactor unrelated code.
-> - Do not modify `packages/blu-core/`, `packages/blu-schema/`, `packages/blu-validate/`, `packages/blu-bus/`, `packages/blu-slate/`, `packages/blu-wire/`, `packages/blu-context/`, or `packages/blu-devtools/` unless you find a real bug - and if you do, document it in the handover before proceeding.
-> - Preserve the bus/slate/context split. `blu-context` is thin wiring, `blu-devtools` is observational, and `blu-view` must not absorb lower-layer runtime logic.
+> - Do not modify `packages/blu-core/`, `packages/blu-schema/`, `packages/blu-validate/`, `packages/blu-bus/`, `packages/blu-slate/`, `packages/blu-wire/`, or `packages/blu-devtools/` unless you find a real bug - and if you do, document it in the handover before proceeding.
+> - Preserve the bus/slate/context split. `blu-context` stays thin wiring, `blu-devtools` stays observational, and `blu-view` should own schema action/data/form interpretation instead of pushing runtime logic downward.
 > - TypeScript strict, ESM-only, `sideEffects: false`, no `any` in public signatures, JSDoc on public functions, >=80% coverage, vitest only.
 > - Workspace package name pattern is `@kitsy/blu-*`, version `1.0.0-dev.0`.
 > - Do not create CLAUDE.md or README files unless explicitly asked.
 >
-> **Step 4 - Files you will create:** new files under `packages/blu-view/` only (`package.json`, `tsconfig.json`, `tsconfig.build.json`, `vitest.config.ts`, `src/*.ts`, `src/*.test.ts`).
+> **Step 4 - Files to prefer editing:** `packages/blu-view/` for runtime work and `packages/blu-context/` only if the Sprint 8 hook surface must be completed to match spec section 16. Avoid broader edits.
 >
 > **Step 5 - Verification (must all pass before you report done):**
 > ```
 > pnpm install
 > pnpm -r build
 > pnpm -r typecheck
-> pnpm -r test     # existing 153 tests must remain green; Sprint 7 must add coverage
+> pnpm -r test     # existing 158 tests must remain green; Sprint 8 must add coverage
 > pnpm lint
 > ```
 >
-> **Step 6 - Update the handover.** When Sprint 7 is complete, edit `docs/handover/OPUS_HANDOVER.md`:
-> - Move Sprint 7 from "Next Work" to "Current Completed Work" (mark as Done with file list and verification output).
-> - Add Sprint 8 (`schema actions, data sources, forms`) as the new "Next Work" using the spec in `docs/blu/execution.md` section 2.3.
+> **Step 6 - Update the handover.** When Sprint 8 is complete, edit `docs/handover/OPUS_HANDOVER.md`:
+> - Move Sprint 8 from "Next Work" to "Current Completed Work" (mark as Done with file list and verification output).
+> - Add Sprint 9 (`blu-shell` plus the first view-library packages) as the new "Next Work" using the spec in `docs/blu/execution.md` section 2.4.
 > - Update section 3 "Current Repo State" with the new package and refreshed test counts.
 > - Resolve or update section 7 "Open Questions" based on choices you made.
 >
