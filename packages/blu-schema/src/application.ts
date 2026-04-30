@@ -2,6 +2,7 @@ import type { ViewReference } from "./view-node.js";
 import type { RouteTable } from "./route.js";
 import type { ThemeConfiguration } from "./theme.js";
 import type { DataSourceRegistration } from "./data-source.js";
+import type { ShellConfiguration } from "./shell.js";
 import type {
   ProjectionRegistration,
   EventRegistration,
@@ -29,6 +30,8 @@ export interface ApplicationConfiguration {
   routes?: RouteTable;
   /** Optional theme tokens. */
   theme?: ThemeConfiguration;
+  /** Optional shell configuration. */
+  shell?: ShellConfiguration;
   /** Data source registrations. */
   dataSources?: DataSourceRegistration[];
   /** Projection registrations. */

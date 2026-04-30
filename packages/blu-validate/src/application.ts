@@ -5,6 +5,19 @@ import { validateViewNodeInto } from "./view-node.js";
 import { validateDataSourceInto } from "./data-source.js";
 
 const SEMVER_PATTERN = /^\d+\.\d+\.\d+(-[\w.-]+)?(\+[\w.-]+)?$/;
+const PRIMARY_KINDS = new Set([
+  "Blank",
+  "AppBar",
+  "Nav",
+  "Game",
+  "Canvas",
+  "Doc",
+  "Wizard",
+]);
+const THEME_KINDS = new Set(["light", "dark", "system"]);
+const DENSITY_KINDS = new Set(["comfortable", "compact"]);
+const OVERLAY_KINDS = new Set(["beta", "maintenance", "offline", "banner"]);
+const SEVERITY_KINDS = new Set(["info", "warning", "error"]);
 
 export function validateApplicationConfiguration(
   config: unknown,
@@ -89,6 +102,18 @@ export function validateApplicationConfiguration(
           }
         });
       }
+    }
+  }
+
+  if (config.shell !== undefined) {
+    if (!isObject(config.shell)) {
+      c.push(
+        "app.invalid.shell",
+        "shell must be an object when present",
+        "shell",
+      );
+    } else {
+      validateShellInto(config.shell, c.child("shell"));
     }
   }
 
@@ -239,4 +264,93 @@ function validateViewReferenceInto(value: unknown, c: ErrorCollector): void {
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function validateShellInto(
+  value: Record<string, unknown>,
+  c: ErrorCollector,
+): void {
+  if (typeof value.primary !== "string" || !PRIMARY_KINDS.has(value.primary)) {
+    c.push(
+      "app.shell.invalid.primary",
+      "shell.primary must be one of the known primary kinds",
+      "primary",
+    );
+  }
+
+  if (
+    value.defaultTheme !== undefined &&
+    (typeof value.defaultTheme !== "string" ||
+      !THEME_KINDS.has(value.defaultTheme))
+  ) {
+    c.push(
+      "app.shell.invalid.defaultTheme",
+      "shell.defaultTheme must be light, dark, or system",
+      "defaultTheme",
+    );
+  }
+
+  if (
+    value.defaultDensity !== undefined &&
+    (typeof value.defaultDensity !== "string" ||
+      !DENSITY_KINDS.has(value.defaultDensity))
+  ) {
+    c.push(
+      "app.shell.invalid.defaultDensity",
+      "shell.defaultDensity must be comfortable or compact",
+      "defaultDensity",
+    );
+  }
+
+  if (value.primaryProps !== undefined && !isObject(value.primaryProps)) {
+    c.push(
+      "app.shell.invalid.primaryProps",
+      "shell.primaryProps must be an object when present",
+      "primaryProps",
+    );
+  }
+
+  if (value.overlays !== undefined) {
+    if (!Array.isArray(value.overlays)) {
+      c.push(
+        "app.shell.invalid.overlays",
+        "shell.overlays must be an array when present",
+        "overlays",
+      );
+    } else {
+      value.overlays.forEach((overlay, index) => {
+        const oc = c.child("overlays").child(index);
+        if (!isObject(overlay)) {
+          oc.push(
+            "app.shell.overlay.invalid.shape",
+            "Shell overlay declarations must be objects",
+          );
+          return;
+        }
+
+        if (
+          typeof overlay.kind !== "string" ||
+          !OVERLAY_KINDS.has(overlay.kind)
+        ) {
+          oc.push(
+            "app.shell.overlay.invalid.kind",
+            "shell overlay kind must be beta, maintenance, offline, or banner",
+            "kind",
+          );
+        }
+
+        if (
+          overlay.severity !== undefined &&
+          (typeof overlay.severity !== "string" ||
+            !SEVERITY_KINDS.has(overlay.severity))
+        ) {
+          oc.push(
+            "app.shell.overlay.invalid.severity",
+            "shell overlay severity must be info, warning, or error",
+            "severity",
+          );
+        }
+      });
+    }
+  }
 }

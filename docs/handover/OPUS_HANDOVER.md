@@ -30,7 +30,7 @@ Phase one is being built bottom-up per `docs/blu/execution.md`:
 3. Stage 3 - view and authoring surface
 4. Stage 4 - shell, tooling, release hardening
 
-Sprint 1 through Sprint 8 are now complete:
+Sprint 1 through Sprint 9 are now complete:
 
 - Sprint 1: `@kitsy/blu-core`, `@kitsy/blu-schema`, `@kitsy/blu-validate`
 - Sprint 2: `@kitsy/blu-bus`
@@ -40,8 +40,9 @@ Sprint 1 through Sprint 8 are now complete:
 - Sprint 6: `@kitsy/blu-devtools`
 - Sprint 7: `@kitsy/blu-view`
 - Sprint 8: schema actions, data sources, forms
+- Sprint 9: `@kitsy/blu-shell`, `@kitsy/blu-style`, `@kitsy/blu-grid`, `@kitsy/blu-ui`
 
-Sprint 9 (`blu-shell` plus the first view-library packages) is next.
+Sprint 10 (`blu-route`, `blu-cli`, and release hardening) is next.
 
 ### Important principles
 
@@ -72,16 +73,17 @@ Sprint 9 (`blu-shell` plus the first view-library packages) is next.
 | `docs/blu/architecture.md` | Canonical | Layering, package map, bus/slate split |
 | `docs/blu/specification.md` | Canonical | Envelope, causality, authority, projection, slate, bus, transport |
 | `docs/blu/execution.md` | Canonical | Sprint sequence, dependency rules, quality rules |
-| `docs/blu/shell.md` | Canonical | Needed later in Sprint 9 |
+| `docs/blu/shell.md` | Canonical | Current shell taxonomy and event model |
 | `docs/governance.md` | Supporting | Repo governance |
 | `docs/handover/OPUS_HANDOVER.md` | This file | Current repo state and next-agent guidance |
 
 **Critical sections for the next agent:**
 
-- `docs/blu/execution.md` section 2.4 - Sprint 9 (`blu-shell` and the view library) spec and exit criteria
+- `docs/blu/execution.md` section 2.4 - Sprint 10 (`blu-route`, `blu-cli`, release hardening) spec and exit criteria
 - `docs/blu/execution.md` section 3 - dependency rules
-- `docs/blu/shell.md` - shell taxonomy and composition rules
-- `docs/blu/specification.md` sections 11 through 16 - current view/runtime contracts the shell must preserve
+- `docs/blu/shell.md` - current shell taxonomy and event model that routing must integrate with
+- `docs/blu/specification.md` sections 10 through 16 - current schema/view/runtime contracts
+- `packages/blu-shell/src/shell.tsx`
 - `packages/blu-view/src/view.tsx`
 - `packages/blu-context/src/context.tsx`
 
@@ -207,11 +209,13 @@ Sprint 9 (`blu-shell` plus the first view-library packages) is next.
 ### What is incomplete
 
 - Stage 3 implementation sprints are complete, but the Stage 3 gate example application is still not built
+- Stage 4 has started with shell and the first view-library packages, but routing, CLI scaffolding, and release hardening are still open
 - No per-package `CHANGELOG.md` files yet
 - No ESLint config yet; `pnpm lint` is currently a Prettier check
 - `blu-slate` is still in-memory only; IndexedDB persistence remains open for the Stage 1 gate path
 - `blu-wire` currently emits transport-local lifecycle events; higher-layer projection of those onto the bus is still a later wiring concern
 - There is still no dedicated Stage 2 gate integration test that mounts provider, transport, and devtools together in one scenario
+- `ApplicationConfiguration.shell` now exists in `blu-schema`, but shell authoring is still runtime-first rather than backed by a richer first-party example app
 
 ### Known errors / warnings
 
@@ -562,87 +566,101 @@ Deliver `@kitsy/blu-devtools`, the Stage 2 devtools MVP: a standalone dev panel 
 
 ---
 
-## Sprint 8 - Current Completed Work
+## Sprint 9 - Current Completed Work
 
 **Status: Done**
 
 ### Goal
 
-Deliver schema actions, data sources, and forms: action resolution (`navigate`, `emit`, `form`, `composite`), data source registration and projection materialization, and the form projection with field bindings and validation.
+Deliver `blu-shell` plus the first view-library packages: enough shell taxonomy, primitive UI components, and theme wiring to render representative applications under the Stage 4 plan.
 
 ### Completed
 
-- Extended `packages/blu-view/src/view.tsx` with a runtime layer that:
-  - compiles `ViewNode.actions` onto component props
-  - resolves `navigate`, `emit`, `form`, and `composite` actions
-  - registers form projections and validates submit flow
-  - registers `StaticDataSource`, `ProjectionDataSource`, and `RestDataSource`
-  - materializes REST lifecycle state as `{ status, data, error, fetchedAt }`
-- Added a thin projection-backed `useForm()` hook to `@kitsy/blu-context`
-- Preserved the existing Sprint 7 binding, condition, repeat, and unknown-URN behavior while adding the Sprint 8 runtime
-- Expanded test coverage in `blu-view` to cover:
-  - emit action compilation
-  - composite plus navigate action execution
-  - REST data-source lifecycle
-  - form field mutation, validation, and submit flow
-- Added a `blu-context` test covering the new `useForm()` handle
+- Extended `blu-schema` with shell types and `ApplicationConfiguration.shell`
+- Extended `blu-validate` so application validation now understands shell configuration
+- Added `@kitsy/blu-style` with a theme boundary and CSS-variable builder
+- Added `@kitsy/blu-grid` with minimal `Stack` and `Row` primitives
+- Added `@kitsy/blu-ui` with the first representative UI primitives:
+  - `Button`
+  - `Text`
+  - `Input`
+  - `Card`
+  - `ModalContent`
+- Added `@kitsy/blu-shell` with:
+  - shell projection registration as `shell:{applicationId}`
+  - event-driven presenter and overlay lifecycle
+  - `useShell()` convenience actions that compile to standard shell events
+  - primary shell rendering for `Blank`, `AppBar`, `Nav`, `Game`, `Canvas`, `Doc`, and `Wizard`
+  - theme and density application through the shell boundary without remounting entry content
+- Added Sprint 9 test coverage for:
+  - `AppBar` plus presenter-hosted modal lifecycle
+  - theme round-trip without subtree remount
+  - representative `blu-ui` composition under all seven primaries
+  - presenter and overlay open/dismiss cycles
 
 ### Files touched
 
-- `packages/blu-context/src/context.tsx`
-- `packages/blu-context/src/index.ts`
-- `packages/blu-context/src/context.test.tsx`
-- `packages/blu-view/src/view.tsx`
-- `packages/blu-view/src/view.test.tsx`
+- `packages/blu-schema/src/application.ts`
+- `packages/blu-schema/src/index.ts`
+- `packages/blu-schema/src/index.test.ts`
+- `packages/blu-schema/src/shell.ts`
+- `packages/blu-validate/src/application.ts`
+- `packages/blu-validate/src/application.test.ts`
+- `packages/blu-style/`
+- `packages/blu-grid/`
+- `packages/blu-ui/`
+- `packages/blu-shell/`
 
 ### Verification
 
 - `pnpm install` -> clean
-- `pnpm -r build` -> clean across 9 packages
-- `pnpm -r typecheck` -> clean across 9 packages
-- `pnpm -r test` -> 163 / 163 passing
+- `pnpm -r build` -> clean across 13 packages
+- `pnpm -r typecheck` -> clean across 13 packages
+- `pnpm -r test` -> 172 / 172 passing
 - `pnpm lint` -> clean
 
 ### Remaining
 
 - Stage 3 gate application still needs to be authored entirely as data before the stage can be called complete
 - Routing remains a placeholder event emission until `blu-route` lands in Sprint 10
+- `blu-icons`, `blu-templates`, and `blu-blocks` are still not present; Sprint 9 only delivered the first view-library slice
 
 ---
 
-## Sprint 9 - Next Work
+## Sprint 10 - Next Work
 
 **Status: Ready to Start**
 
 ### Goal
 
-Deliver `blu-shell` plus the first view-library packages: enough shell taxonomy, primitive UI components, and theme wiring to render representative applications under the Stage 4 plan.
+Deliver routing as a projection with history integration plus CLI scaffolding and release hardening.
 
-Per `docs/blu/execution.md` section 2.4, "Sprint 9 - blu-shell and the view library".
+Per `docs/blu/execution.md` section 2.4, "Sprint 10 - blu-route, blu-cli, and release hardening".
 
 ### Reference docs
 
-- `docs/blu/execution.md` section 2.4 (Sprint 9), section 3 (dependency rules), section 4 (quality rules)
+- `docs/blu/execution.md` section 2.4 (Sprint 10), section 3 (dependency rules), section 4 (quality rules)
 - `docs/blu/shell.md`
-- `docs/blu/specification.md` sections 10, 11, 15, and 16
+- `docs/blu/specification.md` sections 5, 10, 11, 15, and 16
+- `packages/blu-shell/src/shell.tsx`
 - `packages/blu-view/src/view.tsx`
-- Future Sprint 9 package surfaces under the shell/view-library layer
+- Future Sprint 10 package surfaces for `blu-route` and `blu-cli`
 
 ### Tasks
 
-1. Implement the shell taxonomy from `docs/blu/shell.md`
-2. Add the first view-library primitives needed by the Sprint 9 acceptance criteria
-3. Preserve the current Sprint 7 and Sprint 8 view/runtime contracts while introducing shell composition
-4. Add tests for shell conformance, composition rules, and theme round-trip
+1. Implement `blu-route` as a route projection with history integration
+2. Ensure shell surfaces react correctly to route projection changes via `router:navigated`
+3. Add `blu-cli` commands for starter scaffolding, replay, and type generation
+4. Add release-hardening artifacts required by the execution plan
 
 ### Acceptance Criteria
 
-Per `docs/blu/execution.md` Sprint 9 exit criteria:
+Per `docs/blu/execution.md` Sprint 10 exit criteria:
 
-- `AppBar` renders an app with title, content, and a presenter-hosted modal
-- Theme change events repaint without remounting
-- A representative application composed from the first view-library packages renders under the supported shells
-- Tests cover shell conformance, composition rules, and theme round-trip
+- Route changes emit `router:navigated` and are observed by the shell to update primary chrome
+- Back-forward navigation dispatches the correct projection state on each step
+- `blu new`, `blu replay`, and `blu types` satisfy the execution-plan baseline
+- A first-party example application ships with the release path
 
 ---
 
@@ -651,7 +669,6 @@ Per `docs/blu/execution.md` Sprint 9 exit criteria:
 Listed for orientation only. Do not implement ahead.
 
 - Stage 2 gate - React app under provider can emit events, read projections, cross-tab sync, and inspect itself in devtools
-- Sprint 9 - `blu-shell` plus view library packages
 - Sprint 10 - `blu-route`, `blu-cli`, release hardening
 
 ---
@@ -659,30 +676,23 @@ Listed for orientation only. Do not implement ahead.
 ## 5. Immediate Next-Agent Instructions
 
 1. Read `docs/handover/OPUS_HANDOVER.md` first.
-2. Then read, in order:
+2. Then read:
    - `docs/blu/foundation.md`
    - `docs/blu/architecture.md`
-   - `docs/blu/specification.md` (focus on actions, forms, data sources, ViewNode bindings, and React hooks)
-   - `docs/blu/execution.md` section 2.3 (Sprint 8) and section 3 (dependency rules)
-3. Inspect the current Stage 2/3 runtime before writing Sprint 8 code:
+   - `docs/blu/specification.md`
+   - `docs/blu/shell.md`
+   - `docs/blu/execution.md` section 2.4 and section 3
+3. Inspect the current Stage 4 runtime before writing Sprint 10 code:
+   - `packages/blu-shell/src/shell.tsx`
    - `packages/blu-view/src/view.tsx`
    - `packages/blu-context/src/context.tsx`
-   - `packages/blu-schema/src/action.ts`
-   - `packages/blu-schema/src/data-source.ts`
-   - `packages/blu-schema/src/form.ts`
-4. Implement Sprint 8 only. Do not start Sprint 9.
+4. Implement Sprint 10 only. Do not pull future release work forward beyond the execution plan.
 5. Preferred edit surface:
-   - `packages/blu-view/` for action/data/form runtime integration
-   - `packages/blu-context/` only if the Sprint 8 hook contract (`useForm`) or the existing data-source hook surface must be completed to match the spec
+   - `packages/blu-route/`
+   - `packages/blu-cli/`
+   - `packages/blu-shell/` only as needed for route integration
 6. Files not to touch unless a real bug forces it:
-   - `packages/blu-core/`
-   - `packages/blu-schema/`
-   - `packages/blu-validate/`
-   - `packages/blu-bus/`
-   - `packages/blu-slate/`
-   - `packages/blu-wire/`
-   - `packages/blu-devtools/`
-   - root tooling files
+   - lower-layer runtime packages unrelated to routing/CLI
    - anything under `docs/` other than this handover update
 7. Verification commands that must pass before reporting done:
 
@@ -694,7 +704,7 @@ pnpm -r test
 pnpm lint
 ```
 
-Existing 158 tests must remain green. Sprint 8 must add coverage for schema actions, data sources, and forms.
+Existing 172 tests must remain green. Sprint 10 must add routing and CLI coverage.
 
 ---
 
@@ -733,45 +743,43 @@ Copy-paste prompt for the next coding agent:
 
 ---
 
-> You are continuing work on the Blu framework (event-first, schema-driven UI). Sprint 1 through Sprint 7 are complete; this handover reflects the current repo state after `@kitsy/blu-view`.
+> You are continuing work on the Blu framework (event-first, schema-driven UI). Sprint 1 through Sprint 9 are complete; this handover reflects the current repo state after `@kitsy/blu-shell`, `@kitsy/blu-style`, `@kitsy/blu-grid`, and `@kitsy/blu-ui`.
 >
 > **Step 1 - Read these in order, no skipping:**
 > 1. `docs/handover/OPUS_HANDOVER.md` (full file)
 > 2. `docs/blu/foundation.md`
 > 3. `docs/blu/architecture.md`
-> 4. `docs/blu/specification.md` (focus on actions, forms, data sources, ViewNode bindings, and React hooks)
-> 5. `docs/blu/execution.md` section 2.3 (Sprint 8 spec) and section 3 (dependency rules)
-> 6. `packages/blu-view/src/view.tsx`
-> 7. `packages/blu-context/src/context.tsx`
-> 8. `packages/blu-schema/src/action.ts`
-> 9. `packages/blu-schema/src/data-source.ts`
-> 10. `packages/blu-schema/src/form.ts`
+> 4. `docs/blu/specification.md`
+> 5. `docs/blu/shell.md`
+> 6. `docs/blu/execution.md` section 2.4 (Sprint 10 spec) and section 3 (dependency rules)
+> 7. `packages/blu-shell/src/shell.tsx`
+> 8. `packages/blu-view/src/view.tsx`
+> 9. `packages/blu-context/src/context.tsx`
 >
-> **Step 2 - Scope:** Implement **Sprint 8 only** - schema actions, data sources, and forms. The full task list and acceptance criteria are in `docs/handover/OPUS_HANDOVER.md` section 4 "Sprint 8 - Next Work".
+> **Step 2 - Scope:** Implement **Sprint 10 only** - `blu-route`, `blu-cli`, and release hardening. The full task list and acceptance criteria are in `docs/handover/OPUS_HANDOVER.md` section 4 "Sprint 10 - Next Work".
 >
 > **Step 3 - Guardrails (do not violate):**
 > - Do not redesign the architecture. Do not refactor unrelated code.
-> - Do not modify `packages/blu-core/`, `packages/blu-schema/`, `packages/blu-validate/`, `packages/blu-bus/`, `packages/blu-slate/`, `packages/blu-wire/`, or `packages/blu-devtools/` unless you find a real bug - and if you do, document it in the handover before proceeding.
-> - Preserve the bus/slate/context split. `blu-context` stays thin wiring, `blu-devtools` stays observational, and `blu-view` should own schema action/data/form interpretation instead of pushing runtime logic downward.
+> - Do not modify lower-layer packages unless you find a real bug - and if you do, document it in the handover before proceeding.
+> - Preserve the bus/slate/context split. `blu-context` stays thin wiring, `blu-devtools` stays observational, `blu-view` stays the schema renderer, and `blu-shell` remains the shell integration layer rather than absorbing route history logic wholesale.
 > - TypeScript strict, ESM-only, `sideEffects: false`, no `any` in public signatures, JSDoc on public functions, >=80% coverage, vitest only.
 > - Workspace package name pattern is `@kitsy/blu-*`, version `1.0.0-dev.0`.
 > - Do not create CLAUDE.md or README files unless explicitly asked.
 >
-> **Step 4 - Files to prefer editing:** `packages/blu-view/` for runtime work and `packages/blu-context/` only if the Sprint 8 hook surface must be completed to match spec section 16. Avoid broader edits.
+> **Step 4 - Files to prefer editing:** `packages/blu-route/`, `packages/blu-cli/`, and `packages/blu-shell/` only as needed for route integration. Avoid broader edits.
 >
 > **Step 5 - Verification (must all pass before you report done):**
 > ```
 > pnpm install
 > pnpm -r build
 > pnpm -r typecheck
-> pnpm -r test     # existing 158 tests must remain green; Sprint 8 must add coverage
+> pnpm -r test     # existing 172 tests must remain green; Sprint 10 must add coverage
 > pnpm lint
 > ```
 >
-> **Step 6 - Update the handover.** When Sprint 8 is complete, edit `docs/handover/OPUS_HANDOVER.md`:
-> - Move Sprint 8 from "Next Work" to "Current Completed Work" (mark as Done with file list and verification output).
-> - Add Sprint 9 (`blu-shell` plus the first view-library packages) as the new "Next Work" using the spec in `docs/blu/execution.md` section 2.4.
-> - Update section 3 "Current Repo State" with the new package and refreshed test counts.
+> **Step 6 - Update the handover.** When Sprint 10 is complete, edit `docs/handover/OPUS_HANDOVER.md`:
+> - Move Sprint 10 from "Next Work" to "Current Completed Work" (mark as Done with file list and verification output).
+> - Update section 3 "Current Repo State" with the new packages, route/CLI status, and refreshed test counts.
 > - Resolve or update section 7 "Open Questions" based on choices you made.
 >
 > Begin by reading the handover, then proceed.

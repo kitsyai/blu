@@ -8,6 +8,8 @@ import type {
   DataSource,
   EmitAction,
   FormDefinition,
+  ShellConfiguration,
+  ShellState,
   RouteTable,
   ThemeConfiguration,
   ViewNode,
@@ -25,6 +27,10 @@ describe("schema public surface", () => {
       version: "1.0.0",
       entry: {
         inline: { component: "urn:blu:ui:text", props: { value: "hi" } },
+      },
+      shell: {
+        primary: "AppBar",
+        defaultTheme: "light",
       },
     };
     expect(app.id).toBe("demo");
@@ -182,6 +188,51 @@ describe("schema public surface", () => {
       spacing: { sm: 4, md: 8, lg: 16 },
     };
     expect(theme.namespace).toBe("demo");
+  });
+
+  it("accepts shell configuration and shell state shapes", () => {
+    const shell: ShellConfiguration = {
+      primary: "Nav",
+      primaryProps: {
+        title: "Admin",
+      },
+      defaultTheme: "system",
+      defaultDensity: "comfortable",
+      overlays: [
+        {
+          kind: "banner",
+          severity: "info",
+          message: "Preview",
+        },
+      ],
+    };
+    const state: ShellState = {
+      primary: "Nav",
+      presenters: [
+        {
+          id: "modal-1",
+          kind: "modal",
+          content: {
+            component: "urn:blu:ui:text",
+            props: {
+              value: "Hello",
+            },
+          },
+          zOrder: 1,
+        },
+      ],
+      overlays: [
+        {
+          id: "overlay-1",
+          kind: "banner",
+        },
+      ],
+      theme: "dark",
+      density: "compact",
+    };
+
+    expect(shell.primary).toBe("Nav");
+    expect(state.presenters).toHaveLength(1);
   });
 
   it("treats Action#kind as a discriminator", () => {

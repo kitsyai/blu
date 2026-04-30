@@ -63,6 +63,29 @@ describe("validateApplicationConfiguration", () => {
     expect(r.ok).toBe(false);
   });
 
+  it("validates shell configuration", () => {
+    const okResult = validateApplicationConfiguration({
+      ...minimal(),
+      shell: {
+        primary: "AppBar",
+        defaultTheme: "dark",
+        defaultDensity: "compact",
+        overlays: [{ kind: "banner", severity: "info" }],
+      },
+    });
+    expect(okResult.ok).toBe(true);
+
+    const badResult = validateApplicationConfiguration({
+      ...minimal(),
+      shell: {
+        primary: "Sidebar",
+        defaultTheme: "blue",
+        overlays: [{ kind: "toast" }],
+      },
+    });
+    expect(badResult.ok).toBe(false);
+  });
+
   it("validates projections", () => {
     const r = validateApplicationConfiguration({
       ...minimal(),

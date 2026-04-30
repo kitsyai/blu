@@ -60,6 +60,18 @@ export type {
   TypographyConfiguration,
 } from "./theme.js";
 export type {
+  PrimaryKind,
+  PresenterKind,
+  OverlayKind,
+  ShellTheme,
+  ShellDensity,
+  PresenterInstance,
+  OverlayInstance,
+  ShellState,
+  ShellOverlayDeclaration,
+  ShellConfiguration,
+} from "./shell.js";
+export type {
   ProjectionRegistration,
   EventRegistration,
 } from "./registration.js";
