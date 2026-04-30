@@ -8,6 +8,7 @@ import type { Projection } from "@kitsy/blu-core";
 import type { ViewNode } from "@kitsy/blu-schema";
 import { createSlate, type Slate } from "@kitsy/blu-slate";
 import { bluGridEntries } from "@kitsy/blu-grid";
+import { BluRouter, createMemoryHistoryDriver } from "@kitsy/blu-route";
 import { bluUiEntries } from "@kitsy/blu-ui";
 import { ComponentRegistry, createComponentRegistry } from "@kitsy/blu-view";
 import { BluShell, useShell } from "./shell.js";
@@ -182,6 +183,75 @@ describe("@kitsy/blu-shell", () => {
     expect(
       rendered.container.querySelector('[data-testid="overlay-banner"]'),
     ).toBe(null);
+  });
+
+  it("updates shell title from route metadata when router:navigated changes", async () => {
+    const runtime = createRuntimeHarness();
+    const registry = createShellRegistry();
+    const history = createMemoryHistoryDriver("/reports");
+
+    const rendered = await renderApp(
+      <BluProvider bus={runtime.bus} slate={runtime.slate}>
+        <BluRouter
+          history={history}
+          routes={{
+            mode: "memory",
+            routes: [
+              {
+                id: "reports",
+                path: "/reports",
+                view: { ref: "urn:app:view:reports" },
+                meta: { title: "Reports" },
+              },
+              {
+                id: "settings",
+                path: "/settings",
+                view: { ref: "urn:app:view:settings" },
+                meta: { title: "Settings" },
+              },
+            ],
+          }}
+        >
+          <BluShell
+            applicationId="demo"
+            shell={{
+              primary: "AppBar",
+              primaryProps: {
+                title: "Fallback title",
+              },
+            }}
+            entry={createRepresentativeEntry()}
+            registry={registry}
+          />
+        </BluRouter>
+      </BluProvider>,
+    );
+
+    expect(readByTestId(rendered.container, "shell-primary-AppBar")).toContain(
+      "Reports",
+    );
+
+    await act(async () => {
+      await runtime.bus.emit({
+        type: "router:navigated",
+        schemaVersion: 1,
+        class: "fact",
+        durability: "observable",
+        payload: {
+          path: "/settings",
+          mode: "memory",
+          routeId: "settings",
+          params: {},
+          meta: { title: "Settings" },
+          matched: true,
+        },
+        emitter: "urn:test:route",
+      });
+    });
+
+    expect(readByTestId(rendered.container, "shell-primary-AppBar")).toContain(
+      "Settings",
+    );
   });
 });
 

@@ -1,5 +1,10 @@
+import type { RouteState } from "@kitsy/blu-core";
 import type { ViewReference } from "./view-node.js";
 import type { Condition } from "./condition.js";
+
+// Re-export RouteState so consumers of @kitsy/blu-schema get the route state
+// shape from a single import location.
+export type { RouteState };
 
 /**
  * Route table for a Blu application.

@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import type { Bus, EventFilter } from "@kitsy/blu-bus";
-import type { BluEvent } from "@kitsy/blu-core";
+import type { BluEvent, RouteState } from "@kitsy/blu-core";
 import type { Slate } from "@kitsy/blu-slate";
 
 /**
@@ -184,6 +184,15 @@ export function useForm(id: string): FormHandle {
     }),
     [emit, projectionName, state],
   );
+}
+
+/**
+ * Read the current route projection.
+ *
+ * Routing materializes as the shared `route:current` projection.
+ */
+export function useRoute(): RouteState {
+  return useProjection<RouteState>("route:current");
 }
 
 /**

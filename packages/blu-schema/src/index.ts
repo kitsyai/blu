@@ -53,7 +53,7 @@ export type {
   EventSchema,
   SlotSchema,
 } from "./component-meta.js";
-export type { RouteTable, RouteEntry } from "./route.js";
+export type { RouteTable, RouteEntry, RouteState } from "./route.js";
 export type {
   ThemeConfiguration,
   ColorScale,

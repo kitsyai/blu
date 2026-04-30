@@ -15,6 +15,7 @@ import {
   BluProvider,
   type DataSourceState,
   type FormState,
+  useRoute,
   useBus,
   useDataSource,
   useEmit,
@@ -444,6 +445,62 @@ describe("@kitsy/blu-context", () => {
 
     await click(rendered.container, "reset");
     expect(readByTestId(rendered.container, "email")).toBe("");
+  });
+
+  it("reads the shared route projection through useRoute", async () => {
+    const runtime = createRuntimeHarness();
+    registerProjection(runtime.slate, {
+      name: "route:current",
+      initialState: {
+        mode: "history",
+        path: "/",
+        params: {},
+        meta: {
+          title: "Home",
+        },
+        matched: true,
+      },
+      reduce: (state, event) =>
+        event.type === "router:navigated"
+          ? {
+              ...state,
+              path: String((event.payload as { path: string }).path),
+              meta: {
+                title: String(
+                  (event.payload as { meta?: { title?: string } }).meta?.title ??
+                    "",
+                ),
+              },
+            }
+          : state,
+    });
+
+    function App(): React.JSX.Element {
+      const route = useRoute();
+      return (
+        <div>
+          <span data-testid="route-path">{route.path}</span>
+          <span data-testid="route-title">{String(route.meta.title ?? "")}</span>
+        </div>
+      );
+    }
+
+    const rendered = await renderApp(
+      <BluProvider bus={runtime.bus} slate={runtime.slate}>
+        <App />
+      </BluProvider>,
+    );
+
+    expect(readByTestId(rendered.container, "route-path")).toBe("/");
+    expect(readByTestId(rendered.container, "route-title")).toBe("Home");
+
+    await emitFact(runtime.bus, "router:navigated", {
+      path: "/settings",
+      meta: { title: "Settings" },
+    });
+
+    expect(readByTestId(rendered.container, "route-path")).toBe("/settings");
+    expect(readByTestId(rendered.container, "route-title")).toBe("Settings");
   });
 });
 

@@ -1,11 +1,14 @@
 {
-  "name": "@kitsy/blu-shell",
+  "name": "@kitsy/blu-cli",
   "version": "1.0.0-dev.0",
-  "description": "Shell runtime and composition layer for Blu applications.",
+  "description": "Command-line tooling for Blu application scaffolding, replay, and type generation.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "blu": "./dist/cli.js"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -16,7 +19,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/kitsy-ai/kitsy.git",
-    "directory": "packages/blu-shell"
+    "directory": "packages/blu-cli"
   },
   "license": "SEE LICENSE IN LICENSE",
   "author": "Prashant Sinha",
@@ -32,29 +35,17 @@
     "clean": "rimraf dist .turbo"
   },
   "dependencies": {
-    "@kitsy/blu-context": "workspace:*",
     "@kitsy/blu-core": "workspace:*",
-    "@kitsy/blu-grid": "workspace:*",
     "@kitsy/blu-schema": "workspace:*",
-    "@kitsy/blu-style": "workspace:*",
-    "@kitsy/blu-view": "workspace:*"
-  },
-  "peerDependencies": {
-    "react": "^19.0.0"
+    "@kitsy/blu-slate": "workspace:*"
   },
   "devDependencies": {
-    "@kitsy/blu-bus": "workspace:*",
-    "@kitsy/blu-route": "workspace:*",
-    "@kitsy/blu-slate": "workspace:*",
-    "@kitsy/blu-ui": "workspace:*",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "jsdom": "^26.1.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "@types/node": "^24.6.0",
     "rimraf": "^6.0.1",
     "typescript": "^5.8.3",
     "vitest": "^4.0.16"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
- 

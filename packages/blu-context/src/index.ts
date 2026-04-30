@@ -16,5 +16,6 @@ export {
   useEventSubscription,
   useForm,
   useProjection,
+  useRoute,
   useSlate,
 } from "./context.js";

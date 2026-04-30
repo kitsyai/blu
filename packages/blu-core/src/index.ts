@@ -10,6 +10,7 @@ export type { EventClass } from "./event-class.js";
 export type { Durability } from "./durability.js";
 export type { Origin } from "./origin.js";
 export type { Authority } from "./authority.js";
+export type { RouteState } from "./route-state.js";
 export type {
   Projection,
   ProjectionHandle,

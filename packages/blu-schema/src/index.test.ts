@@ -8,6 +8,7 @@ import type {
   DataSource,
   EmitAction,
   FormDefinition,
+  RouteState,
   ShellConfiguration,
   ShellState,
   RouteTable,
@@ -178,6 +179,22 @@ describe("schema public surface", () => {
       notFound: { ref: "urn:app:view:404" },
     };
     expect(routes.routes).toHaveLength(2);
+  });
+
+  it("accepts a RouteState", () => {
+    const route: RouteState = {
+      mode: "history",
+      path: "/admin/42",
+      routeId: "admin",
+      params: {
+        id: "42",
+      },
+      meta: {
+        title: "Admin",
+      },
+      matched: true,
+    };
+    expect(route.params.id).toBe("42");
   });
 
   it("accepts a ThemeConfiguration", () => {

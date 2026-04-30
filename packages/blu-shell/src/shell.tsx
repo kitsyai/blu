@@ -4,6 +4,7 @@ import {
   useEffect,
   useMemo,
   useRef,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 import { useBus, useEmit, useProjection, useSlate } from "@kitsy/blu-context";
@@ -18,6 +19,7 @@ import type {
   ShellState,
   ShellTheme,
   ThemeConfiguration,
+  RouteState,
   ViewNode,
 } from "@kitsy/blu-schema";
 import { ThemeBoundary } from "@kitsy/blu-style";
@@ -187,6 +189,7 @@ export function BluShell({
   }, []);
 
   const state = useProjection<ShellState>(projectionName);
+  const route = useOptionalRouteState();
 
   return (
     <ShellAppContext.Provider value={applicationId}>
@@ -209,6 +212,7 @@ export function BluShell({
         {renderPrimary(
           state,
           shell,
+          route,
           <View
             node={entry}
             registry={registry}
@@ -328,9 +332,10 @@ export function useShell(): ShellAPI {
 function renderPrimary(
   state: ShellState,
   shell: ShellConfiguration,
+  route: RouteState | null,
   entry: ReactNode,
 ): ReactNode {
-  const title = readPrimaryTitle(shell);
+  const title = readPrimaryTitle(shell, route);
   const testId = `shell-primary-${state.primary}`;
 
   switch (state.primary) {
@@ -617,7 +622,14 @@ function canDismissPresenter(
   return dismissOn === reason;
 }
 
-function readPrimaryTitle(shell: ShellConfiguration): string {
+function readPrimaryTitle(
+  shell: ShellConfiguration,
+  route: RouteState | null,
+): string {
+  const routeTitle = route?.meta.title;
+  if (typeof routeTitle === "string" || typeof routeTitle === "number") {
+    return String(routeTitle);
+  }
   const title = shell.primaryProps?.title;
   if (typeof title === "string" || typeof title === "number") {
     return String(title);
@@ -709,4 +721,28 @@ interface ShellThemePayload {
 interface ShellDensityPayload {
   applicationId: string;
   density: ShellDensity;
+}
+
+function useOptionalRouteState(): RouteState | null {
+  const slate = useSlate();
+
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      try {
+        return slate.subscribeProjection<RouteState>("route:current", () => {
+          onStoreChange();
+        });
+      } catch {
+        return () => {};
+      }
+    },
+    () => {
+      try {
+        return slate.getProjection<RouteState>("route:current");
+      } catch {
+        return null;
+      }
+    },
+    () => null,
+  );
 }
