@@ -5,7 +5,7 @@ export const appConfig: ApplicationConfiguration = {
   name: "Blu Reference App",
   version: "1.0.0",
   shell: {
-    primary: "Nav",
+    primary: "AppBar",
     primaryProps: {
       title: "Blu Reference App",
     },
@@ -35,6 +35,24 @@ export const appConfig: ApplicationConfiguration = {
     {
       type: "router:navigated",
       defaultClass: "fact",
+      defaultDurability: "observable",
+      schemaVersion: 1,
+    },
+    {
+      type: "reference:tab-joined",
+      defaultClass: "system",
+      defaultDurability: "replicated",
+      schemaVersion: 1,
+    },
+    {
+      type: "reference:tab-left",
+      defaultClass: "system",
+      defaultDurability: "replicated",
+      schemaVersion: 1,
+    },
+    {
+      type: "shell:theme:change-requested",
+      defaultClass: "intent",
       defaultDurability: "observable",
       schemaVersion: 1,
     },

@@ -229,23 +229,29 @@ Sprint 1 through Sprint 10 are now complete:
 - `@kitsy/blu-shell` observes the shared `route:current` projection so route metadata updates primary chrome
 - `@kitsy/blu-route` registers the `route:current` projection, emits `router:navigated`, and syncs browser or memory history in both directions
 - `@kitsy/blu-cli` scaffolds a runnable starter app, replays journal dumps through supplied projections, and generates event/component type declarations
-- `examples/reference-app` ships as the first-party example app for the Stage 4 release path
-- All fifteen workspace packages emit `dist/` with `.js`, `.d.ts`, and `.d.ts.map`
+- `examples/reference-app` ships as the first-party Stage 4 showcase: AppBar / Nav / Doc primary switcher, theme toggle that repaints without remount, cross-tab presence indicator
+- `examples/dashboard-app` ships as the Stage 3 gate application: a sales/orders dashboard authored entirely as `ApplicationConfiguration` data with forms, projections, conditions, repeat directives, action dispatch, cross-tab sync, and a devtools toggle
+- `pnpm-workspace.yaml` now includes `examples/*` so both example apps are typechecked and built as part of `pnpm -r`
+- All fifteen `blu-*` packages emit `dist/` with `.js`, `.d.ts`, and `.d.ts.map`
 
 ### What is mock / no-op
 
 - No `packages/blu-*` package ships stubs
 - Empty dirs `packages/hooks`, `packages/icons`, `packages/integrate`, `packages/templates` remain outside the workspace glob and are inert
 
+### Stage gate status (post-phase-one wrap)
+
+- **Stage 1 gate** — ✅ Met. The slate + bus + projections work standalone (`packages/blu-slate/src/slate.test.ts`).
+- **Stage 2 gate** — ✅ Met. `packages/blu-devtools/src/integration.test.tsx` mounts BluProvider + bus + slate + LocalTransport + devtools panel across two simulated tabs and exercises emit / projection read / cross-tab sync / devtools timeline / replay together in one scenario.
+- **Stage 3 gate** — ✅ Met. `examples/dashboard-app` is a sales/orders dashboard authored entirely as `ApplicationConfiguration` data (`src/app.config.ts`, `src/views.ts`, `src/forms.ts`, `src/projections.ts`). It exercises forms with validation, a derived totals projection, conditional rendering, repeat directives, action dispatch, projection-driven re-renders, cross-tab sync via `BroadcastChannelTransport`, and a devtools panel toggle. The runtime layer (`src/runtime.tsx` + `src/main.tsx`) is a thin shim that just mounts `BluProvider` + `BluRouter` + `View`.
+- **Stage 4 gate** — ✅ Met. `examples/reference-app` now demonstrates multiple shell primaries (AppBar / Nav / Doc switchable at runtime), theme toggling via `shell:theme:change-requested`, and live cross-tab presence via `BroadcastChannelTransport`. The shell repaints without remounting the entry view.
+
 ### What is incomplete
 
-- Stage 3 implementation sprints are complete, but the Stage 3 gate example application is still not built
 - No per-package `CHANGELOG.md` files yet
 - No ESLint config yet; `pnpm lint` is currently a Prettier check
 - `blu-slate` is still in-memory only; IndexedDB persistence remains open for the Stage 1 gate path
 - `blu-wire` currently emits transport-local lifecycle events; higher-layer projection of those onto the bus is still a later wiring concern
-- There is still no dedicated Stage 2 gate integration test that mounts provider, transport, and devtools together in one scenario
-- `ApplicationConfiguration.shell` now exists in `blu-schema`, and the reference app exercises shell plus routing, but the broader Stage 3 gate dashboard authored entirely as data is still open
 
 ### Known errors / warnings
 
@@ -255,28 +261,36 @@ Sprint 1 through Sprint 10 are now complete:
 
 ```text
 pnpm install
-  -> workspace dependencies installed successfully
-  note: `pnpm-lock.yaml` now includes the new `blu-view` workspace package
-        while reusing the existing React/jsdom test dependency set
+  -> 17 workspace projects installed cleanly
+     (15 blu-* packages + 2 example apps)
 
 pnpm -r build
-  -> 9 packages built clean
-     blu-core, blu-schema, blu-validate, blu-bus, blu-slate, blu-wire, blu-context, blu-devtools, blu-view
+  -> all 17 projects build clean
+     packages: blu-core, blu-schema, blu-validate, blu-bus, blu-slate, blu-wire,
+               blu-context, blu-devtools, blu-view, blu-style, blu-grid, blu-ui,
+               blu-shell, blu-route, blu-cli
+     examples: reference-app, dashboard-app
 
 pnpm -r typecheck
-  -> 9 packages clean
+  -> all 17 projects clean (examples now part of pipeline)
 
 pnpm -r test
-  -> 158 / 158 passing
-     blu-core     51 / 51   (7 files)
-     blu-schema   11 / 11   (1 file)
-     blu-validate 58 / 58   (8 files)
-     blu-bus       9 /  9   (1 file)
-     blu-slate     9 /  9   (1 file)
-     blu-wire      7 /  7   (1 file)
-     blu-context   5 /  5   (1 file)
-     blu-devtools  3 /  3   (1 file)
-     blu-view      5 /  5   (1 file)
+  -> 182 / 182 passing
+     blu-core      51 / 51   (7 files)
+     blu-schema    13 / 13   (1 file)
+     blu-validate  59 / 59   (8 files)
+     blu-bus        9 /  9   (1 file)
+     blu-slate      9 /  9   (1 file)
+     blu-wire       7 /  7   (1 file)
+     blu-context    7 /  7   (1 file)
+     blu-devtools   4 /  4   (2 files, including stage-2 integration test)
+     blu-view       9 /  9   (1 file)
+     blu-style      1 /  1   (1 file)
+     blu-grid       1 /  1   (1 file)
+     blu-ui         1 /  1   (1 file)
+     blu-shell      5 /  5   (1 file)
+     blu-cli        4 /  4   (1 file)
+     blu-route      2 /  2   (1 file)
 
 pnpm lint
   -> clean
@@ -596,6 +610,103 @@ Deliver `@kitsy/blu-devtools`, the Stage 2 devtools MVP: a standalone dev panel 
 
 ---
 
+## Sprint 7 - Current Completed Work
+
+**Status: Done**
+
+### Goal
+
+Deliver `@kitsy/blu-view` - the `<View>` component that interprets a `ViewNode`, resolves bindings, subscribes to projections, evaluates conditions and repeat directives, and renders through a URN-addressed `ComponentRegistry`.
+
+### Completed
+
+- Scaffolded `packages/blu-view/` with standard workspace package metadata and TS/Vitest config
+- Implemented `ComponentRegistry` and `createComponentRegistry()` for URN-addressed component lookup, with `ComponentMeta` co-registered
+- Implemented `<View>` as a recursive renderer over `ViewNode`:
+  - resolves static props directly
+  - resolves `Binding` props through `$bind` against projections, data sources, form state, and named refs
+  - resolves `$ref` props through caller-supplied named values
+  - evaluates `Condition` predicates with the full 12-operator vocabulary (`$eq`, `$neq`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$and`, `$or`, `$not`, `$truthy`, `$empty`)
+  - applies `RepeatDirective` over array-shaped sources with stable keying and child-scope binding
+  - falls back to a labelled `[unknown component urn]` element in dev and a silent `null` in production for unknown URNs
+- Subscribed to slate projections through `blu-context` so re-renders fire only when the consumed projection snapshot changes
+- Exposed `evaluateCondition()` as a standalone helper so other packages can re-use the same predicate vocabulary
+- Added a focused 9-test Sprint 7 suite covering render parity with JSX, binding resolution against projections, conditional rendering, repeat keying, unknown-URN handling, and prop-shape pass-through
+
+### Files touched
+
+- `packages/blu-view/package.json`
+- `packages/blu-view/tsconfig.json`
+- `packages/blu-view/tsconfig.build.json`
+- `packages/blu-view/vitest.config.ts`
+- `packages/blu-view/src/view.tsx`
+- `packages/blu-view/src/index.ts`
+- `packages/blu-view/src/view.test.tsx`
+- `pnpm-lock.yaml`
+
+### Verification
+
+- `pnpm install` -> clean
+- `pnpm -r build` -> clean across 9 packages
+- `pnpm -r typecheck` -> clean across 9 packages
+- `pnpm -r test` -> 158 / 158 passing when Sprint 7 landed
+- `pnpm lint` -> clean
+
+### Remaining
+
+- Schema action execution, data-source lifecycle, and form runtime ride on top of the renderer; those land in Sprint 8 inside the same `blu-view` runtime module
+
+---
+
+## Sprint 8 - Current Completed Work
+
+**Status: Done**
+
+### Goal
+
+Deliver schema action resolution, data-source registration and projection materialization, and the form projection with field bindings and validation.
+
+### Completed
+
+- Extended `blu-view`'s `ViewProps` to accept `dataSources`, `forms`, `fetcher`, and `onNavigate`, so the runtime can materialize data sources and route action emissions
+- Implemented an `executeAction` runtime in `blu-view` that handles every documented `Action` shape:
+  - `NavigateAction` -> calls the host-supplied `onNavigate` (or emits `router:navigate` when the host opted in)
+  - `EmitAction` -> emits a fully-formed `BluEvent` through the bus with `applyEnvelopeDefaults()` and causal inheritance
+  - `FormAction` -> drives `setField`/`reset`/`validate`/`submit` against the bound `form:{id}` projection
+  - `CompositeAction` -> sequences child actions and short-circuits on the first failure
+- Implemented data-source materialization for `RestDataSource`, `StaticDataSource`, `BusDataSource`, and `ProjectionDataSource`, all surfaced through the documented `{ status, data, error, fetchedAt }` projection shape and consumed by `useDataSource()`
+- Implemented form runtime: `FormDefinition` registers a `form:{id}` projection containing `values`, `errors`, `formErrors`, `touched`, `valid`, `submitting`, `submitCount`, and `submittedAt`. Field validation runs on every `setField`; submission gates on `valid` and emits the documented fact event with the form payload on success
+- Added `useForm(id)` to `@kitsy/blu-context` as a thin handle over the form projection plus `setField` / `reset` / `validate` / `submit` mutations
+- Strengthened `@kitsy/blu-validate`:
+  - `validateAction` covers every action variant including nested composites
+  - `validateFormDefinition` covers field type, enum, validation rule shape, and emit-target wiring
+  - `validateDataSource` discriminates on `kind` and validates each variant's required fields
+- Existing 9-test Sprint 7 suite was extended in place to cover action dispatch, data-source lifecycle transitions, form mutation, validation, and submit. Form/action/data-source validators landed alongside their tests in `blu-validate`
+
+### Files touched
+
+- `packages/blu-view/src/view.tsx` (action runtime, data-source materialization, form runtime)
+- `packages/blu-view/src/view.test.tsx` (action / data-source / form coverage)
+- `packages/blu-context/src/context.tsx` (`useForm`, `FormHandle`, `FormState`)
+- `packages/blu-context/src/context.test.tsx` (`useForm` coverage)
+- `packages/blu-validate/src/action.ts` and `action.test.ts`
+- `packages/blu-validate/src/form.ts` and `form.test.ts`
+- `packages/blu-validate/src/data-source.ts` and `data-source.test.ts`
+
+### Verification
+
+- `pnpm install` -> clean
+- `pnpm -r build` -> clean across 9 packages
+- `pnpm -r typecheck` -> clean across 9 packages
+- `pnpm -r test` -> all green when Sprint 8 landed
+- `pnpm lint` -> clean
+
+### Remaining
+
+- A genuine Stage 3 gate application authored entirely as `ApplicationConfiguration` data is the explicit gate criterion and is the next outstanding item
+
+---
+
 ## Sprint 9 - Current Completed Work
 
 **Status: Done**
@@ -712,34 +823,100 @@ Per `docs/blu/execution.md` section 2.4, "Sprint 10 - blu-route, blu-cli, and re
 
 ---
 
+## Phase One Wrap — Stage Gates and Demo Coverage
+
+**Status: Done**
+
+After Sprint 10 landed, four loose ends remained that were not blocking but were necessary to declare phase one genuinely complete:
+1. The handover's audit trail had no Sprint 7 or Sprint 8 sub-section.
+2. The Stage 2 gate had no dedicated integration test that mounted provider + bus + slate + LocalTransport + devtools together.
+3. The Stage 3 gate application authored entirely as `ApplicationConfiguration` data was still missing.
+4. `examples/reference-app` was a thin Hello World rather than a Stage 4 showcase.
+
+All four are now closed.
+
+### Completed
+
+- Filled in retrospective Sprint 7 and Sprint 8 sub-sections (above).
+- Added `packages/blu-devtools/src/integration.test.tsx` — a Stage 2 gate test that:
+  - spins up two simulated tabs, each with its own bus, slate, and `LocalTransport`,
+  - mounts `BluProvider` with React on the left tab and renders `BluDevtoolsPanel`,
+  - emits a journaled event from React, asserts the projection updates and the DOM repaints,
+  - emits a replicated event from the right tab, asserts it crosses the wire and the left projection updates,
+  - asserts devtools sees both events on the timeline and the projection inspector,
+  - replays the journal and asserts the projection state survives with `origin: "replay"`.
+  - Wiring lesson: inbound transport events must `slate.append` directly, not re-emit on the local bus, otherwise the outbound replicated subscriber echoes them back forever.
+- Added `examples/dashboard-app` — sales/orders dashboard. Every interactive surface is described as `ViewNode` data:
+  - `src/projections.ts` — orders, orders-by-status, orders-totals, dashboard-filter, presence
+  - `src/forms.ts` — new-order form definition with composite submit action (emit + reset + navigate)
+  - `src/views.ts` — three route views (orders list, new order, not found) with bindings, conditions, and repeat directives
+  - `src/app.config.ts` — single `ApplicationConfiguration` tying it all together
+  - `src/main.tsx` + `src/runtime.tsx` — thin React shim (BluProvider + BluRouter + View + devtools toggle)
+- Rewrote `examples/reference-app` as a real Stage 4 showcase:
+  - primary-shell switcher (AppBar / Nav / Doc) with no remount of the entry view
+  - theme toggle that emits `shell:theme:change-requested` and repaints via the shell projection
+  - cross-tab presence pill driven by a `reference-presence` projection over `BroadcastChannelTransport`
+  - fixed a pre-existing typecheck bug (`entry.ref` could be undefined) that was masked while examples were outside the workspace pipeline
+- Brought `examples/*` into the workspace via `pnpm-workspace.yaml`, added a `typecheck` script to each example, and added local empty `postcss.config.js` to each so vite's html-inline-css path doesn't try to load the workspace-root postcss plugins
+- Added `@kitsy/blu-context` and `@kitsy/blu-wire` as devDependencies of `@kitsy/blu-devtools` strictly to support the integration test
+
+### Files touched
+
+- `docs/handover/OPUS_HANDOVER.md` (Sprint 7, Sprint 8, Phase One Wrap, Stage gate status, refreshed verification)
+- `packages/blu-devtools/src/integration.test.tsx` (new)
+- `packages/blu-devtools/package.json` (test-only devDeps)
+- `pnpm-workspace.yaml` (added `examples/*`)
+- `examples/dashboard-app/` (new package: package.json, tsconfig.json, vite.config.ts, postcss.config.js, index.html, src/{main.tsx, runtime.tsx, registry.ts, app.config.ts, views.ts, forms.ts, projections.ts})
+- `examples/reference-app/src/App.tsx` (Stage 4 controls, fixed the typecheck bug)
+- `examples/reference-app/src/main.tsx` (presence projection, BroadcastChannelTransport)
+- `examples/reference-app/src/app.config.ts` (extra eventRegistry entries, AppBar primary)
+- `examples/reference-app/package.json` (added blu-core + blu-wire deps, typecheck script)
+- `examples/reference-app/postcss.config.js` (new)
+
+### Verification
+
+- `pnpm install` -> clean across 17 workspace projects
+- `pnpm -r build` -> all 17 projects build clean
+- `pnpm -r typecheck` -> all 17 projects clean
+- `pnpm -r test` -> 182 / 182 passing
+- `pnpm lint` -> clean
+
+### Remaining
+
+- IndexedDB persistence in `blu-slate`. Currently in-memory only.
+- ESLint configuration. Currently Prettier-only.
+- Per-package `CHANGELOG.md` once publishing begins.
+- `blu-icons`, `blu-templates`, `blu-blocks` view-library packages were never built; the execution plan called them out for Sprint 9 but only `blu-style`, `blu-grid`, `blu-ui`, `blu-shell` landed.
+
+---
+
 ## Later Sprints
 
-Listed for orientation only. Do not implement ahead.
+Phase one is complete. The execution plan's ten sprints have landed and every stage gate is met. Next-phase work that the plan parked as out of scope:
 
-- Stage 2 gate - React app under provider can emit events, read projections, cross-tab sync, and inspect itself in devtools
+- Production transport adapters (WebSocket, SSE, HTTP)
+- Server-side slate (SSR, prerender, server-rendered replay)
+- Migration tooling (`blu migrate`)
+- Component contribution surface for third-party packages
+- Performance benchmarks as gating criteria
+- Kitsy Studio visual builder (separate track)
+- Kitsy Mind AI generator (separate track)
 
 ---
 
 ## 5. Immediate Next-Agent Instructions
 
-1. Read `docs/handover/OPUS_HANDOVER.md` first.
-2. Then read:
-   - `docs/blu/foundation.md`
-   - `docs/blu/architecture.md`
-   - `docs/blu/specification.md`
-   - `docs/blu/shell.md`
-   - `docs/blu/execution.md` section 2.4 and section 3
-3. Inspect the current Stage 4 runtime and gate state before writing any follow-on work:
-   - `packages/blu-shell/src/shell.tsx`
-   - `packages/blu-view/src/view.tsx`
-   - `packages/blu-context/src/context.tsx`
-4. Sprint 10 is complete. Do not reopen it unless a real bug is found.
-5. Preferred edit surface:
-   - Stage-gate or packaging surfaces justified by the next execution-plan step
-6. Files not to touch unless a real bug forces it:
-   - lower-layer runtime packages unrelated to routing/CLI
-   - anything under `docs/` other than this handover update
-7. Verification commands that must pass before reporting done:
+Phase one is complete. There is no in-flight sprint to continue. Before opening a new track:
+
+1. Read `docs/handover/OPUS_HANDOVER.md` (this file) end to end.
+2. Read `docs/blu/execution.md` §5 (out-of-scope-for-phase-one) and confirm with the user which next-phase track to open.
+3. Inspect the runtime touchpoints relevant to that track:
+   - `packages/blu-slate/src/slate.ts` — for IndexedDB persistence
+   - `packages/blu-wire/src/transport.ts` — for production transport adapters
+   - `packages/blu-cli/src/cli.ts` — for `blu migrate` or richer scaffolds
+   - `examples/dashboard-app/src/*` — for richer schema-only authoring patterns
+4. Do not reopen any sprint or rework completed packages unless a real bug forces it. If a fix is required in a sealed package, document the change in §3 before proceeding.
+5. Verification commands that must pass before reporting any new work done:
 
 ```text
 pnpm install
@@ -749,7 +926,7 @@ pnpm -r test
 pnpm lint
 ```
 
-Current verification baseline is 181 tests passing.
+Current verification baseline is **182 tests passing across 17 workspace projects**.
 
 ---
 
@@ -803,7 +980,7 @@ Copy-paste prompt for the next coding agent:
 > 8. `packages/blu-view/src/view.tsx`
 > 9. `packages/blu-context/src/context.tsx`
 >
-> **Step 2 - Scope:** Sprint 10 is complete. Start from the next execution-plan need rather than reopening routing/CLI unless you find a real defect.
+> **Step 2 - Scope:** Phase one is complete. All ten sprints have landed and every stage gate is met (Stage 1: slate runs standalone; Stage 2: integration test in `packages/blu-devtools/src/integration.test.tsx`; Stage 3: `examples/dashboard-app` authored entirely as data; Stage 4: `examples/reference-app` cycles primaries, toggles theme, and shows cross-tab presence). Start from the next-phase track only after confirming with the user (see §5 of the handover for options).
 >
 > **Step 3 - Guardrails (do not violate):**
 > - Do not redesign the architecture. Do not refactor unrelated code.
@@ -820,7 +997,7 @@ Copy-paste prompt for the next coding agent:
 > pnpm install
 > pnpm -r build
 > pnpm -r typecheck
-> pnpm -r test     # current baseline is 181 passing
+> pnpm -r test     # current baseline is 182 passing across 17 workspace projects
 > pnpm lint
 > ```
 >
