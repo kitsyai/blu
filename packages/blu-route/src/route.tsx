@@ -1,9 +1,4 @@
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  type ReactNode,
-} from "react";
+import { useEffect, useMemo, useRef, type ReactNode } from "react";
 import { useBus, useEmit, useSlate } from "@kitsy/blu-context";
 import type { BluEvent, PartialEvent, Projection } from "@kitsy/blu-core";
 import type { RouteEntry, RouteState, RouteTable } from "@kitsy/blu-schema";
@@ -51,7 +46,10 @@ export function BluRouter({
   useEffect(() => {
     const syncFromDriver = () => {
       const nextPath = driver.read();
-      void emitRouteEvent(emit, createNavigationPayload(routes, nextPath, driver.mode));
+      void emitRouteEvent(
+        emit,
+        createNavigationPayload(routes, nextPath, driver.mode),
+      );
     };
 
     const unsubscribeHistory = driver.subscribe(syncFromDriver);
@@ -91,7 +89,11 @@ export function createRouteProjection(
   return {
     name: "route:current",
     authority: "local-authoritative",
-    initialState: resolveRouteState(routes, normalizePath(initialPath), routes.mode ?? "history"),
+    initialState: resolveRouteState(
+      routes,
+      normalizePath(initialPath),
+      routes.mode ?? "history",
+    ),
     eventFilter: (event) => event.type === "router:navigated",
     reduce: (_state, event) => {
       const payload = event.payload as RouterNavigatedPayload;
@@ -170,7 +172,9 @@ export function registerRouteProjection(
   initialPath: string = "/",
 ): () => void {
   try {
-    const handle = slate.registerProjection(createRouteProjection(routes, initialPath));
+    const handle = slate.registerProjection(
+      createRouteProjection(routes, initialPath),
+    );
     return () => {
       handle.unregister();
     };

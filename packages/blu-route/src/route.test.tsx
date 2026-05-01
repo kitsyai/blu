@@ -131,9 +131,12 @@ function createRuntimeHarness(): RuntimeHarness {
   const bus = createBus();
   const slate = createSlate();
 
-  bus.subscribe(() => true, async (event) => {
-    await slate.append(event);
-  });
+  bus.subscribe(
+    () => true,
+    async (event) => {
+      await slate.append(event);
+    },
+  );
 
   return { bus, slate };
 }

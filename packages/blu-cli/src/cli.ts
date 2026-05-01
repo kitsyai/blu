@@ -61,7 +61,8 @@ function readOptions(args: readonly string[]): Record<string, string> {
   return options;
 }
 
-const isMain = process.argv[1] !== undefined && import.meta.url.endsWith("/cli.js");
+const isMain =
+  process.argv[1] !== undefined && import.meta.url.endsWith("/cli.js");
 if (isMain) {
   const [, , ...argv] = process.argv;
   const code = await runCli(argv);

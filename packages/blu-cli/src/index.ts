@@ -32,22 +32,32 @@ export interface TypesCommandOptions {
   outputPath?: string;
 }
 
-export async function scaffoldNewApp(options: NewCommandOptions): Promise<void> {
+export async function scaffoldNewApp(
+  options: NewCommandOptions,
+): Promise<void> {
   const targetDir = path.resolve(options.targetDir);
   const appName = options.name ?? path.basename(targetDir);
 
   await mkdir(path.join(targetDir, "src"), { recursive: true });
-  await writeFile(path.join(targetDir, "package.json"), starterPackageJson(appName));
+  await writeFile(
+    path.join(targetDir, "package.json"),
+    starterPackageJson(appName),
+  );
   await writeFile(path.join(targetDir, "index.html"), starterIndexHtml);
   await writeFile(path.join(targetDir, "tsconfig.json"), starterTsConfig);
   await writeFile(path.join(targetDir, "vite.config.ts"), starterViteConfig);
-  await writeFile(path.join(targetDir, "src", "app.config.ts"), starterAppConfig);
+  await writeFile(
+    path.join(targetDir, "src", "app.config.ts"),
+    starterAppConfig,
+  );
   await writeFile(path.join(targetDir, "src", "registry.tsx"), starterRegistry);
   await writeFile(path.join(targetDir, "src", "runtime.tsx"), starterRuntime);
   await writeFile(path.join(targetDir, "src", "main.tsx"), starterMain);
 }
 
-export async function replayJournal(options: ReplayCommandOptions): Promise<string> {
+export async function replayJournal(
+  options: ReplayCommandOptions,
+): Promise<string> {
   const journal = JSON.parse(
     await readFile(path.resolve(options.journalPath), "utf8"),
   ) as BluEvent[];
@@ -67,7 +77,10 @@ export async function replayJournal(options: ReplayCommandOptions): Promise<stri
   const result = {
     eventCount: journal.length,
     projections: Object.fromEntries(
-      projections.map((projection) => [projection.name, slate.getProjection(projection.name)]),
+      projections.map((projection) => [
+        projection.name,
+        slate.getProjection(projection.name),
+      ]),
     ),
   };
   const serialized = JSON.stringify(result, null, 2);
@@ -78,7 +91,9 @@ export async function replayJournal(options: ReplayCommandOptions): Promise<stri
   return serialized;
 }
 
-export async function generateTypes(options: TypesCommandOptions): Promise<string> {
+export async function generateTypes(
+  options: TypesCommandOptions,
+): Promise<string> {
   const config = JSON.parse(
     await readFile(path.resolve(options.configPath), "utf8"),
   ) as ApplicationConfiguration;
@@ -117,7 +132,9 @@ export async function generateTypes(options: TypesCommandOptions): Promise<strin
   return withImport;
 }
 
-async function loadOptionalModule<T>(modulePath: string | undefined): Promise<T | null> {
+async function loadOptionalModule<T>(
+  modulePath: string | undefined,
+): Promise<T | null> {
   if (modulePath === undefined) {
     return null;
   }

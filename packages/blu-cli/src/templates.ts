@@ -13,6 +13,7 @@ export const starterPackageJson = (name: string) => `{
     "@kitsy/blu-context": "1.0.0-dev.0",
     "@kitsy/blu-grid": "1.0.0-dev.0",
     "@kitsy/blu-route": "1.0.0-dev.0",
+    "@kitsy/blu-schema": "1.0.0-dev.0",
     "@kitsy/blu-shell": "1.0.0-dev.0",
     "@kitsy/blu-slate": "1.0.0-dev.0",
     "@kitsy/blu-style": "1.0.0-dev.0",
@@ -192,6 +193,7 @@ createRoot(root).render(
 `;
 
 export const starterRuntime = `import React from "react";
+import { useRoute } from "@kitsy/blu-context";
 import { BluRouter } from "@kitsy/blu-route";
 import { BluShell } from "@kitsy/blu-shell";
 import { appConfig } from "./app.config";
@@ -206,13 +208,35 @@ export function BluRouteShellApp() {
 
   return (
     <BluRouter routes={routes}>
-      <BluShell
-        applicationId={appConfig.id}
-        shell={appConfig.shell ?? { primary: "Blank" }}
-        entry={views["urn:app:view:home"]}
-        registry={registry}
-      />
+      <RouteDrivenShell registry={registry} views={views} />
     </BluRouter>
+  );
+}
+
+function RouteDrivenShell({
+  registry,
+  views,
+}: ReturnType<typeof createRegistry>) {
+  const route = useRoute();
+  const routeEntry = appConfig.routes?.routes.find(
+    (candidate) => candidate.id === route.routeId,
+  );
+  const entryRef =
+    routeEntry?.view.ref ??
+    appConfig.routes?.notFound?.ref ??
+    appConfig.entry.ref;
+  const entry = views[entryRef];
+  if (entry === undefined) {
+    throw new Error(\`Missing view for route entry "\${entryRef}".\`);
+  }
+
+  return (
+    <BluShell
+      applicationId={appConfig.id}
+      shell={appConfig.shell ?? { primary: "Blank" }}
+      entry={entry}
+      registry={registry}
+    />
   );
 }
 `;

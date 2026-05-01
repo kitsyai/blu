@@ -13,6 +13,7 @@
     "@kitsy/blu-context": "workspace:*",
     "@kitsy/blu-grid": "workspace:*",
     "@kitsy/blu-route": "workspace:*",
+    "@kitsy/blu-schema": "workspace:*",
     "@kitsy/blu-shell": "workspace:*",
     "@kitsy/blu-slate": "workspace:*",
     "@kitsy/blu-ui": "workspace:*",

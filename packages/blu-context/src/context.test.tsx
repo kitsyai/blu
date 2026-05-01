@@ -467,8 +467,8 @@ describe("@kitsy/blu-context", () => {
               path: String((event.payload as { path: string }).path),
               meta: {
                 title: String(
-                  (event.payload as { meta?: { title?: string } }).meta?.title ??
-                    "",
+                  (event.payload as { meta?: { title?: string } }).meta
+                    ?.title ?? "",
                 ),
               },
             }
@@ -480,7 +480,9 @@ describe("@kitsy/blu-context", () => {
       return (
         <div>
           <span data-testid="route-path">{route.path}</span>
-          <span data-testid="route-title">{String(route.meta.title ?? "")}</span>
+          <span data-testid="route-title">
+            {String(route.meta.title ?? "")}
+          </span>
         </div>
       );
     }

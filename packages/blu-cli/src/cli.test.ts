@@ -13,7 +13,10 @@ describe("@kitsy/blu-cli", () => {
     const packageJson = JSON.parse(
       await readFile(path.join(targetDir, "package.json"), "utf8"),
     ) as { scripts: Record<string, string> };
-    const main = await readFile(path.join(targetDir, "src", "main.tsx"), "utf8");
+    const main = await readFile(
+      path.join(targetDir, "src", "main.tsx"),
+      "utf8",
+    );
 
     expect(packageJson.scripts.dev).toBe("vite");
     expect(main).toContain("BluRouteShellApp");
@@ -104,8 +107,8 @@ describe("@kitsy/blu-cli", () => {
     const targetDir = await mkdtemp(path.join(os.tmpdir(), "blu-run-"));
     const code = await runCli(["new", targetDir]);
     expect(code).toBe(0);
-    expect(await readFile(path.join(targetDir, "src", "runtime.tsx"), "utf8")).toContain(
-      "BluShell",
-    );
+    expect(
+      await readFile(path.join(targetDir, "src", "runtime.tsx"), "utf8"),
+    ).toContain("BluShell");
   });
 });
