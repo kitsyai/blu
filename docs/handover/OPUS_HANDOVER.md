@@ -30,7 +30,7 @@ Phase one is being built bottom-up per `docs/blu/execution.md`:
 3. Stage 3 - view and authoring surface
 4. Stage 4 - shell, tooling, release hardening
 
-Sprint 1 through Sprint 9 are now complete:
+Sprint 1 through Sprint 10 are now complete:
 
 - Sprint 1: `@kitsy/blu-core`, `@kitsy/blu-schema`, `@kitsy/blu-validate`
 - Sprint 2: `@kitsy/blu-bus`
@@ -41,8 +41,7 @@ Sprint 1 through Sprint 9 are now complete:
 - Sprint 7: `@kitsy/blu-view`
 - Sprint 8: schema actions, data sources, forms
 - Sprint 9: `@kitsy/blu-shell`, `@kitsy/blu-style`, `@kitsy/blu-grid`, `@kitsy/blu-ui`
-
-Sprint 10 (`blu-route`, `blu-cli`, and release hardening) is next.
+- Sprint 10: `@kitsy/blu-route`, `@kitsy/blu-cli`, release hardening, and the first-party reference app
 
 ### Important principles
 
@@ -79,7 +78,7 @@ Sprint 10 (`blu-route`, `blu-cli`, and release hardening) is next.
 
 **Critical sections for the next agent:**
 
-- `docs/blu/execution.md` section 2.4 - Sprint 10 (`blu-route`, `blu-cli`, release hardening) spec and exit criteria
+- `docs/blu/execution.md` section 2.4 - Stage 4 / Sprint 10 completion criteria and Stage 4 gate
 - `docs/blu/execution.md` section 3 - dependency rules
 - `docs/blu/shell.md` - current shell taxonomy and event model that routing must integrate with
 - `docs/blu/specification.md` sections 10 through 16 - current schema/view/runtime contracts
@@ -168,6 +167,27 @@ Sprint 10 (`blu-route`, `blu-cli`, and release hardening) is next.
 - `src/index.ts`
 - `src/view.test.tsx`
 
+**`packages/blu-route/` (Sprint 10):**
+
+- `package.json`, `tsconfig.json`, `tsconfig.build.json`, `vitest.config.ts`
+- `src/route.tsx` - `BluRouter`, route projection registration, route matching, memory/browser history drivers
+- `src/index.ts`
+- `src/route.test.tsx`
+
+**`packages/blu-cli/` (Sprint 10):**
+
+- `package.json`, `tsconfig.json`, `tsconfig.build.json`, `vitest.config.ts`
+- `src/templates.ts` - starter application templates
+- `src/index.ts` - `scaffoldNewApp()`, `replayJournal()`, `generateTypes()`
+- `src/cli.ts` - `blu` command entrypoint
+- `src/cli.test.ts`
+
+**Release-hardening artifacts (Sprint 10):**
+
+- `CHANGELOG.md`
+- `MIGRATION.md`
+- `examples/reference-app/` - Vite reference app with route-aware shell integration
+
 ### Files modified
 
 - `packages/blu-core/src/event.ts`
@@ -186,6 +206,12 @@ Sprint 10 (`blu-route`, `blu-cli`, and release hardening) is next.
 - `@kitsy/blu-context`
 - `@kitsy/blu-devtools`
 - `@kitsy/blu-view`
+- `@kitsy/blu-style`
+- `@kitsy/blu-grid`
+- `@kitsy/blu-ui`
+- `@kitsy/blu-shell`
+- `@kitsy/blu-route`
+- `@kitsy/blu-cli`
 
 ### What is wired
 
@@ -199,7 +225,12 @@ Sprint 10 (`blu-route`, `blu-cli`, and release hardening) is next.
 - `@kitsy/blu-view` imports only `@kitsy/blu-core`, `@kitsy/blu-schema`, `@kitsy/blu-context`, and React
 - `@kitsy/blu-devtools` reads the journal from the slate and accepts host-supplied projection descriptors plus transport snapshots instead of reaching into lower-layer registries that do not exist yet
 - `@kitsy/blu-view` resolves `ViewNode` props, bindings, conditions, and repeat directives against the current slate through `blu-context`, and uses a runtime `ComponentRegistry` for URN-addressed rendering
-- All nine workspace packages emit `dist/` with `.js`, `.d.ts`, and `.d.ts.map`
+- `@kitsy/blu-context` now exposes `useForm()` and `useRoute()` as thin projection-backed hooks
+- `@kitsy/blu-shell` observes the shared `route:current` projection so route metadata updates primary chrome
+- `@kitsy/blu-route` registers the `route:current` projection, emits `router:navigated`, and syncs browser or memory history in both directions
+- `@kitsy/blu-cli` scaffolds a runnable starter app, replays journal dumps through supplied projections, and generates event/component type declarations
+- `examples/reference-app` ships as the first-party example app for the Stage 4 release path
+- All fifteen workspace packages emit `dist/` with `.js`, `.d.ts`, and `.d.ts.map`
 
 ### What is mock / no-op
 
@@ -209,13 +240,12 @@ Sprint 10 (`blu-route`, `blu-cli`, and release hardening) is next.
 ### What is incomplete
 
 - Stage 3 implementation sprints are complete, but the Stage 3 gate example application is still not built
-- Stage 4 has started with shell and the first view-library packages, but routing, CLI scaffolding, and release hardening are still open
 - No per-package `CHANGELOG.md` files yet
 - No ESLint config yet; `pnpm lint` is currently a Prettier check
 - `blu-slate` is still in-memory only; IndexedDB persistence remains open for the Stage 1 gate path
 - `blu-wire` currently emits transport-local lifecycle events; higher-layer projection of those onto the bus is still a later wiring concern
 - There is still no dedicated Stage 2 gate integration test that mounts provider, transport, and devtools together in one scenario
-- `ApplicationConfiguration.shell` now exists in `blu-schema`, but shell authoring is still runtime-first rather than backed by a richer first-party example app
+- `ApplicationConfiguration.shell` now exists in `blu-schema`, and the reference app exercises shell plus routing, but the broader Stage 3 gate dashboard authored entirely as data is still open
 
 ### Known errors / warnings
 
@@ -622,14 +652,13 @@ Deliver `blu-shell` plus the first view-library packages: enough shell taxonomy,
 ### Remaining
 
 - Stage 3 gate application still needs to be authored entirely as data before the stage can be called complete
-- Routing remains a placeholder event emission until `blu-route` lands in Sprint 10
 - `blu-icons`, `blu-templates`, and `blu-blocks` are still not present; Sprint 9 only delivered the first view-library slice
 
 ---
 
-## Sprint 10 - Next Work
+## Sprint 10 - Current Completed Work
 
-**Status: Ready to Start**
+**Status: Done**
 
 ### Goal
 
@@ -646,21 +675,40 @@ Per `docs/blu/execution.md` section 2.4, "Sprint 10 - blu-route, blu-cli, and re
 - `packages/blu-view/src/view.tsx`
 - Future Sprint 10 package surfaces for `blu-route` and `blu-cli`
 
-### Tasks
+### Delivered
 
-1. Implement `blu-route` as a route projection with history integration
-2. Ensure shell surfaces react correctly to route projection changes via `router:navigated`
-3. Add `blu-cli` commands for starter scaffolding, replay, and type generation
-4. Add release-hardening artifacts required by the execution plan
+1. Implemented `@kitsy/blu-route` with the `route:current` projection, route matching, browser/memory history drivers, and `router:navigated` synchronization.
+2. Wired `@kitsy/blu-shell` to consume route metadata so primary chrome updates when navigation changes.
+3. Added `@kitsy/blu-context` route access through `useRoute()`.
+4. Added `@kitsy/blu-cli` commands for `blu new`, `blu replay`, and `blu types`.
+5. Added release-hardening artifacts `CHANGELOG.md`, `MIGRATION.md`, and `examples/reference-app`.
 
-### Acceptance Criteria
+### Files touched
 
-Per `docs/blu/execution.md` Sprint 10 exit criteria:
+- `packages/blu-core/src/route-state.ts`
+- `packages/blu-core/src/index.ts`
+- `packages/blu-schema/src/route.ts`
+- `packages/blu-schema/src/index.ts`
+- `packages/blu-schema/src/index.test.ts`
+- `packages/blu-context/src/context.tsx`
+- `packages/blu-context/src/index.ts`
+- `packages/blu-context/src/context.test.tsx`
+- `packages/blu-route/`
+- `packages/blu-shell/src/shell.tsx`
+- `packages/blu-shell/src/shell.test.tsx`
+- `packages/blu-shell/package.json`
+- `packages/blu-cli/`
+- `CHANGELOG.md`
+- `MIGRATION.md`
+- `examples/reference-app/`
 
-- Route changes emit `router:navigated` and are observed by the shell to update primary chrome
-- Back-forward navigation dispatches the correct projection state on each step
-- `blu new`, `blu replay`, and `blu types` satisfy the execution-plan baseline
-- A first-party example application ships with the release path
+### Verification
+
+- `pnpm install` -> clean
+- `pnpm -r build` -> clean across 15 packages
+- `pnpm -r typecheck` -> clean across 15 packages
+- `pnpm -r test` -> 181 / 181 passing
+- `pnpm lint` -> clean
 
 ---
 
@@ -669,7 +717,6 @@ Per `docs/blu/execution.md` Sprint 10 exit criteria:
 Listed for orientation only. Do not implement ahead.
 
 - Stage 2 gate - React app under provider can emit events, read projections, cross-tab sync, and inspect itself in devtools
-- Sprint 10 - `blu-route`, `blu-cli`, release hardening
 
 ---
 
@@ -682,15 +729,13 @@ Listed for orientation only. Do not implement ahead.
    - `docs/blu/specification.md`
    - `docs/blu/shell.md`
    - `docs/blu/execution.md` section 2.4 and section 3
-3. Inspect the current Stage 4 runtime before writing Sprint 10 code:
+3. Inspect the current Stage 4 runtime and gate state before writing any follow-on work:
    - `packages/blu-shell/src/shell.tsx`
    - `packages/blu-view/src/view.tsx`
    - `packages/blu-context/src/context.tsx`
-4. Implement Sprint 10 only. Do not pull future release work forward beyond the execution plan.
+4. Sprint 10 is complete. Do not reopen it unless a real bug is found.
 5. Preferred edit surface:
-   - `packages/blu-route/`
-   - `packages/blu-cli/`
-   - `packages/blu-shell/` only as needed for route integration
+   - Stage-gate or packaging surfaces justified by the next execution-plan step
 6. Files not to touch unless a real bug forces it:
    - lower-layer runtime packages unrelated to routing/CLI
    - anything under `docs/` other than this handover update
@@ -704,7 +749,7 @@ pnpm -r test
 pnpm lint
 ```
 
-Existing 172 tests must remain green. Sprint 10 must add routing and CLI coverage.
+Current verification baseline is 181 tests passing.
 
 ---
 
@@ -730,8 +775,10 @@ Existing 172 tests must remain green. Sprint 10 must add routing and CLI coverag
 | Should devtools introspect projections and transports through new lower-layer registries or continue taking host-supplied descriptors/snapshots? | Resolved for Sprint 6: stay host-supplied for now; only add registries later if Stage 3 or Stage 4 ergonomics prove they are necessary. | Future runtime ergonomics review |
 | Where should `sync:transport:error` and `sync:session:resumed` become visible to app code? | Keep them transport-local in `blu-wire` for now and bridge them onto the bus at a later integration layer if app-facing visibility becomes necessary. | Stage 3 or Stage 4 integration decision |
 | Is IndexedDB persistence required before the Stage 2 gate, or can the gate initially proceed with in-memory slate plus transport? | The slate is still in-memory only; defer persistence unless the Stage 1 or Stage 2 gate explicitly forces it first. | Stage gate planning |
-| Where should schema action execution live? | Keep execution in the `blu-view` runtime layer; `blu-context` may expose thin hooks, but it should not become the action interpreter. | Sprint 8 implementation |
-| Should Sprint 8 add `useForm()` to `blu-context` now? | Probably yes if the form projection wiring needs to surface a read/write handle that matches spec section 16; keep it thin and projection-backed. | Sprint 8 implementation |
+| Where should schema action execution live? | Resolved in Sprint 8: keep execution in the `blu-view` runtime layer; `blu-context` only exposes thin projection-backed hooks. | Done |
+| Should Sprint 8 add `useForm()` to `blu-context` now? | Resolved in Sprint 8: yes, but keep it thin and projection-backed. | Done |
+| Should route state live in `blu-schema` or `blu-core`? | Resolved in Sprint 10: canonical `RouteState` lives in `blu-core` and is re-exported through `blu-schema` for convenience. | Done |
+| How should shell consume routing without creating a hard package cycle? | Resolved in Sprint 10: `blu-shell` reads the optional `route:current` projection via `blu-context`, while `blu-route` owns history integration. | Done |
 | ESLint config - adopt now or after Sprint 8? | Still after Sprint 8 unless the action/form runtime exposes a concrete linting need first. | Stage 3 gate |
 | Per-package `CHANGELOG.md`? | Add at first publish, not now. | First alpha publish |
 
@@ -743,7 +790,7 @@ Copy-paste prompt for the next coding agent:
 
 ---
 
-> You are continuing work on the Blu framework (event-first, schema-driven UI). Sprint 1 through Sprint 9 are complete; this handover reflects the current repo state after `@kitsy/blu-shell`, `@kitsy/blu-style`, `@kitsy/blu-grid`, and `@kitsy/blu-ui`.
+> You are continuing work on the Blu framework (event-first, schema-driven UI). Sprint 1 through Sprint 10 are complete; this handover reflects the current repo state after routing, CLI, and release hardening landed.
 >
 > **Step 1 - Read these in order, no skipping:**
 > 1. `docs/handover/OPUS_HANDOVER.md` (full file)
@@ -756,7 +803,7 @@ Copy-paste prompt for the next coding agent:
 > 8. `packages/blu-view/src/view.tsx`
 > 9. `packages/blu-context/src/context.tsx`
 >
-> **Step 2 - Scope:** Implement **Sprint 10 only** - `blu-route`, `blu-cli`, and release hardening. The full task list and acceptance criteria are in `docs/handover/OPUS_HANDOVER.md` section 4 "Sprint 10 - Next Work".
+> **Step 2 - Scope:** Sprint 10 is complete. Start from the next execution-plan need rather than reopening routing/CLI unless you find a real defect.
 >
 > **Step 3 - Guardrails (do not violate):**
 > - Do not redesign the architecture. Do not refactor unrelated code.
@@ -766,20 +813,17 @@ Copy-paste prompt for the next coding agent:
 > - Workspace package name pattern is `@kitsy/blu-*`, version `1.0.0-dev.0`.
 > - Do not create CLAUDE.md or README files unless explicitly asked.
 >
-> **Step 4 - Files to prefer editing:** `packages/blu-route/`, `packages/blu-cli/`, and `packages/blu-shell/` only as needed for route integration. Avoid broader edits.
+> **Step 4 - Files to prefer editing:** choose the smallest surface needed for the next execution-plan task. Avoid broader edits.
 >
-> **Step 5 - Verification (must all pass before you report done):**
+> **Step 5 - Verification baseline:**
 > ```
 > pnpm install
 > pnpm -r build
 > pnpm -r typecheck
-> pnpm -r test     # existing 172 tests must remain green; Sprint 10 must add coverage
+> pnpm -r test     # current baseline is 181 passing
 > pnpm lint
 > ```
 >
-> **Step 6 - Update the handover.** When Sprint 10 is complete, edit `docs/handover/OPUS_HANDOVER.md`:
-> - Move Sprint 10 from "Next Work" to "Current Completed Work" (mark as Done with file list and verification output).
-> - Update section 3 "Current Repo State" with the new packages, route/CLI status, and refreshed test counts.
-> - Resolve or update section 7 "Open Questions" based on choices you made.
+> **Step 6 - Update the handover.** If you complete the next execution-plan milestone or fix a real defect, refresh this file with the new status, touched files, and verification output.
 >
 > Begin by reading the handover, then proceed.
